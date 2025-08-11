@@ -4,7 +4,7 @@ class Router {
         '' => ['section' => 'home', 'subsection' => null],
         'explore' => ['section' => 'explore', 'subsection' => null],
         'settings' => ['section' => 'settings', 'subsection' => 'profile'],
-        'settings/profile' => ['section' => 'settings', 'subsection' => 'profile'],
+        'settings/your-account' => ['section' => 'settings', 'subsection' => 'profile'],
         'settings/login' => ['section' => 'settings', 'subsection' => 'login'],
         'settings/accessibility' => ['section' => 'settings', 'subsection' => 'accessibility'],
         'settings/purchase-history' => ['section' => 'settings', 'subsection' => 'purchaseHistory'],

@@ -7,7 +7,7 @@ function initUrlManager() {
     urlMap = {
         home: '',
         explore: 'explore',
-        'settings-profile': 'settings/profile',
+        'settings-profile': 'settings/your-account',
         'settings-login': 'settings/login',
         'settings-accessibility': 'settings/accessibility',
         'settings-purchaseHistory': 'settings/purchase-history',
@@ -31,7 +31,7 @@ function generateUrl(section, subsection = null) {
         const sub = subsection || 'profile';
         switch (sub) {
             case 'profile':
-                path = 'settings/profile';
+                path = 'settings/your-account';
                 break;
             case 'login':
                 path = 'settings/login';
@@ -43,7 +43,7 @@ function generateUrl(section, subsection = null) {
                 path = 'settings/purchase-history';
                 break;
             default:
-                path = 'settings/profile';
+                path = 'settings/your-account';
         }
     } else if (section === 'help') {
         const sub = subsection || 'privacy';
