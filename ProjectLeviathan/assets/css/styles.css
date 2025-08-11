@@ -225,7 +225,6 @@ body {
 
 .section-content {
     height: 100%;
-    padding: 20px;
     overflow-y: auto;
     position: absolute;
     top: 0;
