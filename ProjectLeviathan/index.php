@@ -1,6 +1,6 @@
 <?php
 // Incluir el sistema de routing
-require_once 'router.php';
+require_once 'config/router.php';
 
 // Función helper para generar URLs base
 function getBaseUrl() {
@@ -62,47 +62,7 @@ $BASE_URL = getBaseUrl();
                 <div class="general-content-bottom">
                     <div class="general-content-scrolleable">
                         <?php include 'includes/modules/module-surface.php'; ?>
-                        <div class="section-container">
-                            <?php if ($CURRENT_SECTION === '404'): ?>
-                                <div class="section-content active" data-section="section404">
-                                    <div class="error-404">
-                                        <h1>404</h1>
-                                        <h2>Página no encontrada</h2>
-                                        <p>La página que buscas no existe o ha sido movida.</p>
-                                        <a href="<?php echo $BASE_URL; ?>" class="btn-home">
-                                            Volver al inicio
-                                        </a>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <div class="section-content <?php echo $CURRENT_SECTION === 'home' ? 'active' : 'disabled'; ?>" data-section="sectionHome">
-                                    <h1>Página Principal</h1>
-                                    <p>Bienvenido al contenido de la página principal</p>
-                                </div>
-                                <div class="section-content <?php echo $CURRENT_SECTION === 'explore' ? 'active' : 'disabled'; ?>" data-section="sectionExplore">
-                                    <h1>Explorar Comunidades</h1>
-                                    <p>Descubre y explora diferentes comunidades</p>
-                                </div>
-                                <div class="section-content <?php echo $CURRENT_SECTION === 'settings' ? 'active' : 'disabled'; ?>" data-section="sectionSettings">
-                                    <div class="section-content <?php echo $CURRENT_SUBSECTION === 'profile' ? 'active' : 'disabled'; ?>" data-section="sectionProfile">
-                                        <h2>Tu Perfil</h2>
-                                        <p>Administra la configuración de tu perfil de usuario</p>
-                                    </div>
-                                    <div class="section-content <?php echo $CURRENT_SUBSECTION === 'login' ? 'active' : 'disabled'; ?>" data-section="sectionLogin">
-                                        <h2>Iniciar Sesión</h2>
-                                        <p>Inicia sesión en tu cuenta</p>
-                                    </div>
-                                    <div class="section-content <?php echo $CURRENT_SUBSECTION === 'accessibility' ? 'active' : 'disabled'; ?>" data-section="sectionAccessibility">
-                                        <h2>Accesibilidad</h2>
-                                        <p>Configura las opciones de accesibilidad</p>
-                                    </div>
-                                    <div class="section-content <?php echo $CURRENT_SUBSECTION === 'purchaseHistory' ? 'active' : 'disabled'; ?>" data-section="sectionPurchaseHistory">
-                                        <h2>Historial de Compras</h2>
-                                        <p>Ve tu historial de compras y transacciones</p>
-                                    </div>
-                                </div>        
-                            <?php endif; ?>
-                        </div>
+                        <?php include 'includes/sections/general-sections.php'; ?>
                     </div>
                 </div>
             </div>
