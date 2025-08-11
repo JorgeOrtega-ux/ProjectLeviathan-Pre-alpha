@@ -7,7 +7,6 @@
                 <p>No pudimos encontrar la página que estás buscando. Es posible que haya sido movida o que ya no exista.</p>
                 <a href="<?php echo $BASE_URL; ?>" class="btn-home">
                     <span>Volver a la página principal</span>
-                    <span class="material-symbols-rounded">arrow_forward</span>
                 </a>
             </div>
         </div>
