@@ -15,7 +15,8 @@ function initMainController() {
     // --- State Variables (initialized from current URL) ---
     let isModuleOptionsActive = false;
     let isModuleSurfaceActive = false;
-    let activeSelector = null; // Holds the currently active selector element
+    let activeSelector = null; // Holds the currently active selector DROPDOWN element
+    let activeSelectorButton = null; // Holds the button that triggered the active selector
     let isSectionHomeActive = initialState ? initialState.section === 'home' : true;
     let isSectionExploreActive = initialState ? initialState.section === 'explore' : false;
     let isSectionSettingsActive = initialState ? initialState.section === 'settings' : false;
@@ -41,7 +42,7 @@ function initMainController() {
     const surfaceMain = document.querySelector('[data-surface-type="main"]');
     const surfaceSettings = document.querySelector('[data-surface-type="settings"]');
     const surfaceHelp = document.querySelector('[data-surface-type="help"]');
-    const customSelectors = document.querySelectorAll('[data-module="moduleSelector"]');
+    const customSelectorButtons = document.querySelectorAll('[data-action="toggleSelector"]');
     
     // Sections
     const sectionHome = document.querySelector('[data-section="sectionHome"]');
@@ -227,11 +228,15 @@ function initMainController() {
 
     const closeAllSelectors = () => {
         if (activeSelector) {
+            activeSelector.classList.add('disabled');
             activeSelector.classList.remove('active');
             activeSelector = null;
-            return true;
         }
-        return false;
+        if (activeSelectorButton) {
+            activeSelectorButton.classList.remove('active');
+            activeSelectorButton = null;
+        }
+        return true; // Return true to indicate a potential state change
     };
 
     const updateMainMenuButtons = (activeButton) => {
@@ -437,45 +442,66 @@ function initMainController() {
             updateLogState();
         });
 
-        // --- Custom Selectors ---
-        customSelectors.forEach(selector => {
-            const button = selector.querySelector('[data-action="toggleSelector"]');
-            const selectedValue = button.querySelector('.selected-value');
-            const menuLinks = selector.querySelectorAll('.menu-link');
+        // --- Custom Selectors (REWRITTEN LOGIC) ---
+        customSelectorButtons.forEach(button => {
+            const parentControlGroup = button.closest('.profile-control-group');
+            if (!parentControlGroup) return;
+            
+            const selectorDropdown = parentControlGroup.querySelector('[data-module="moduleSelector"]');
+            if (!selectorDropdown) return;
+            
+            const menuLinks = selectorDropdown.querySelectorAll('.menu-link');
+            const selectedValueSpan = button.querySelector('.selected-value');
 
             button.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const previouslyActiveSelector = activeSelector;
-                
-                // Close all other selectors
-                if (activeSelector && activeSelector !== selector) {
+                const isAlreadyActive = selectorDropdown.classList.contains('active');
+
+                // Close any previously active selector
+                if (activeSelector && activeSelector !== selectorDropdown) {
+                    activeSelector.classList.add('disabled');
                     activeSelector.classList.remove('active');
+                    if (activeSelectorButton) {
+                        activeSelectorButton.classList.remove('active');
+                    }
                 }
-                
+
                 // Toggle the current one
-                selector.classList.toggle('active');
+                selectorDropdown.classList.toggle('disabled');
+                selectorDropdown.classList.toggle('active');
+                button.classList.toggle('active');
                 
                 // Update the global state
-                activeSelector = selector.classList.contains('active') ? selector : null;
-
-                // Log only if the overall state of having an active selector changes
-                if ((!previouslyActiveSelector && activeSelector) || (previouslyActiveSelector && !activeSelector)) {
-                    updateLogState();
+                if (isAlreadyActive) {
+                    activeSelector = null;
+                    activeSelectorButton = null;
+                } else {
+                    activeSelector = selectorDropdown;
+                    activeSelectorButton = button;
                 }
+                updateLogState();
             });
 
             menuLinks.forEach(link => {
                 link.addEventListener('click', () => {
-                    const allLinks = selector.querySelectorAll('.menu-link');
+                    const newText = link.querySelector('.menu-link-text span').textContent;
+                    if (selectedValueSpan) {
+                         selectedValueSpan.textContent = newText;
+                    }
+                   
+                    // Update active link state within the dropdown
+                    const allLinks = selectorDropdown.querySelectorAll('.menu-link');
                     allLinks.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
-                    selectedValue.textContent = link.querySelector('.menu-link-text span').textContent;
+                    
+                    // Close the dropdown
                     if(closeAllSelectors()) {
                         updateLogState();
                     }
                 });
             });
         });
+
 
         // --- Profile Edit/View State Toggle ---
         document.querySelectorAll('[data-action="toggleEditState"]').forEach(button => {
@@ -602,7 +628,8 @@ function initMainController() {
                     stateChanged = closeMenuSurface() || stateChanged;
                 }
 
-                if (activeSelector && !activeSelector.contains(e.target)) {
+                // Check for click outside of active selector and its button
+                if (activeSelector && !activeSelector.contains(e.target) && activeSelectorButton && !activeSelectorButton.contains(e.target)) {
                     stateChanged = closeAllSelectors() || stateChanged;
                 }
 
@@ -616,9 +643,14 @@ function initMainController() {
         if (closeOnEscape) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    const optionsClosed = closeMenuOptions();
-                    const surfaceClosed = closeMenuSurface();
-                    const selectorClosed = closeAllSelectors();
+                    let optionsClosed = closeMenuOptions();
+                    let surfaceClosed = closeMenuSurface();
+                    let selectorClosed = false;
+                    // Only close selectors if they are active
+                    if (activeSelector) {
+                        selectorClosed = closeAllSelectors();
+                    }
+                    
                     if (optionsClosed || surfaceClosed || selectorClosed) {
                         updateLogState();
                     }

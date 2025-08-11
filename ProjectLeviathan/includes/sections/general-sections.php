@@ -11,8 +11,8 @@
             </div>
         </div>
     <?php else: ?>
-        <?php include 'includes/sections/home-section.php'; ?>
-        <?php include 'includes/sections/explore-section.php'; ?>
+        <?php include 'includes/sections/main/home-section.php'; ?>
+        <?php include 'includes/sections/main/explore-section.php'; ?>
         <div class="section-content <?php echo $CURRENT_SECTION === 'settings' ? 'active' : 'disabled'; ?>" data-section="sectionSettings">
             <?php include 'includes/sections/settings/profile-section.php'; ?>
             <?php include 'includes/sections/settings/login-section.php'; ?>
