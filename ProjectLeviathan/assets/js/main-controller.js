@@ -263,7 +263,7 @@ function initMainController() {
             setSectionActive(sectionExplore, [sectionHome, sectionSettings], 'explore', updateUrl);
             updateMainMenuButtons(toggleSectionExploreButton);
         } else if (section === 'settings') {
-            setSectionActive(sectionSettings, [sectionHome, sectionExplore], 'settings', updateUrl);
+            setSectionActive(sectionSettings, [sectionHome, sectionExplore], 'settings', false);
             
             const sub = subsection || 'profile';
             if (sub === 'profile') {
