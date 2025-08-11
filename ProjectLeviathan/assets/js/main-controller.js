@@ -15,6 +15,7 @@ function initMainController() {
     // --- State Variables (initialized from current URL) ---
     let isModuleOptionsActive = false;
     let isModuleSurfaceActive = false;
+    let activeSelector = null; // Holds the currently active selector element
     let isSectionHomeActive = initialState ? initialState.section === 'home' : true;
     let isSectionExploreActive = initialState ? initialState.section === 'explore' : false;
     let isSectionSettingsActive = initialState ? initialState.section === 'settings' : false;
@@ -40,6 +41,7 @@ function initMainController() {
     const surfaceMain = document.querySelector('[data-surface-type="main"]');
     const surfaceSettings = document.querySelector('[data-surface-type="settings"]');
     const surfaceHelp = document.querySelector('[data-surface-type="help"]');
+    const customSelectors = document.querySelectorAll('[data-module="moduleSelector"]');
     
     // Sections
     const sectionHome = document.querySelector('[data-section="sectionHome"]');
@@ -97,18 +99,19 @@ function initMainController() {
         const tableData = {
             '── Modules ──': { section: 'Module Options', status: toState(isModuleOptionsActive) },
             ' ': { section: 'Module Surface', status: toState(isModuleSurfaceActive) },
+            '  ': { section: 'Active Selector', status: activeSelector ? '✅ Activo' : '❌ Inactivo' },
             '── Sections ──': { section: 'Home', status: toState(isSectionHomeActive) },
-            '  ': { section: 'Explore', status: toState(isSectionExploreActive) },
-            '   ': { section: 'Settings', status: toState(isSectionSettingsActive) },
-            '    ': { section: 'Help', status: toState(isSectionHelpActive) },
+            '   ': { section: 'Explore', status: toState(isSectionExploreActive) },
+            '    ': { section: 'Settings', status: toState(isSectionSettingsActive) },
+            '     ': { section: 'Help', status: toState(isSectionHelpActive) },
             '── Sub-sections (Settings) ──': { section: 'Profile', status: toState(isSectionProfileActive) },
-            '     ': { section: 'Login', status: toState(isSectionLoginActive) },
-            '      ': { section: 'Accessibility', status: toState(isSectionAccessibilityActive) },
-            '       ': { section: 'Purchase History', status: toState(isSectionPurchaseHistoryActive) },
+            '      ': { section: 'Login', status: toState(isSectionLoginActive) },
+            '       ': { section: 'Accessibility', status: toState(isSectionAccessibilityActive) },
+            '        ': { section: 'Purchase History', status: toState(isSectionPurchaseHistoryActive) },
             '── Sub-sections (Help) ──': { section: 'Privacy Policy', status: toState(isSectionPrivacyActive) },
-            '        ': { section: 'Terms & Conditions', status: toState(isSectionTermsActive) },
-            '         ': { section: 'Cookies Policy', status: toState(isSectionCookiesActive) },
-            '          ': { section: 'Suggestions', status: toState(isSectionSuggestionsActive) },
+            '         ': { section: 'Terms & Conditions', status: toState(isSectionTermsActive) },
+            '          ': { section: 'Cookies Policy', status: toState(isSectionCookiesActive) },
+            '           ': { section: 'Suggestions', status: toState(isSectionSuggestionsActive) },
         };
         console.group("ProjectLeviathan - State Overview");
         console.table(tableData);
@@ -220,6 +223,15 @@ function initMainController() {
         if (isModuleSurfaceActive) return false;
         setMenuSurfaceOpen();
         return true;
+    };
+
+    const closeAllSelectors = () => {
+        if (activeSelector) {
+            activeSelector.classList.remove('active');
+            activeSelector = null;
+            return true;
+        }
+        return false;
     };
 
     const updateMainMenuButtons = (activeButton) => {
@@ -336,7 +348,7 @@ function initMainController() {
         // Help subsections
         isSectionPrivacyActive = activeStateSetter === 'privacy';
         isSectionTermsActive = activeStateSetter === 'terms';
-        isSectionCookiesActive = activeStateSetter === 'cookies';
+        isSectionCookiesActive = activeStateSetter === 'suggestions';
         isSectionSuggestionsActive = activeStateSetter === 'suggestions';
 
         if (updateUrl) {
@@ -409,184 +421,219 @@ function initMainController() {
         }
     };
 
-    // Event Listeners
-    toggleOptionsButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        isModuleOptionsActive ? closeMenuOptions() : openMenuOptions();
-        updateLogState();
-    });
-
-    toggleSurfaceButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        isModuleSurfaceActive ? closeMenuSurface() : openMenuSurface();
-        updateLogState();
-    });
-
-    // Main navigation
-    if (toggleSectionHomeButton) {
-        toggleSectionHomeButton.addEventListener('click', () => {
-            if (!isSectionHomeActive) {
-                handleNavigationChange('home');
-            }
+    // --- Event Listeners Setup ---
+    function setupEventListeners() {
+        toggleOptionsButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllSelectors();
+            isModuleOptionsActive ? closeMenuOptions() : openMenuOptions();
+            updateLogState();
         });
-    }
 
-    if (toggleSectionExploreButton) {
-        toggleSectionExploreButton.addEventListener('click', () => {
-            if (!isSectionExploreActive) {
-                handleNavigationChange('explore');
-            }
+        toggleSurfaceButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllSelectors();
+            isModuleSurfaceActive ? closeMenuSurface() : openMenuSurface();
+            updateLogState();
         });
-    }
 
-    // Navigation from options menu
-    if (toggleSectionSettingsButton) {
-        toggleSectionSettingsButton.addEventListener('click', () => {
-            handleNavigationChange('settings', 'profile');
-            closeMenuOptions();
-        });
-    }
+        // --- Custom Selectors ---
+        customSelectors.forEach(selector => {
+            const button = selector.querySelector('[data-action="toggleSelector"]');
+            const selectedValue = button.querySelector('.selected-value');
+            const menuLinks = selector.querySelectorAll('.menu-link');
 
-    if (toggleSectionHelpButton) {
-        toggleSectionHelpButton.addEventListener('click', () => {
-            handleNavigationChange('help', 'privacy');
-            closeMenuOptions();
-        });
-    }
-
-    if (toggleSectionPurchaseHistoryButton) {
-        toggleSectionPurchaseHistoryButton.addEventListener('click', () => {
-            handleNavigationChange('settings', 'purchaseHistory');
-            closeMenuOptions();
-        });
-    }
-
-    // Navigation from settings surface
-    if (toggleSectionHomeFromSettingsButton) {
-        toggleSectionHomeFromSettingsButton.addEventListener('click', () => {
-            handleNavigationChange('home');
-        });
-    }
-
-    if (toggleSectionProfileButton) {
-        toggleSectionProfileButton.addEventListener('click', () => {
-            if (!isSectionProfileActive) {
-                handleNavigationChange('settings', 'profile');
-            }
-        });
-    }
-
-    if (toggleSectionLoginButton) {
-        toggleSectionLoginButton.addEventListener('click', () => {
-            if (!isSectionLoginActive) {
-                handleNavigationChange('settings', 'login');
-            }
-        });
-    }
-
-    if (toggleSectionAccessibilityButton) {
-        toggleSectionAccessibilityButton.addEventListener('click', () => {
-            if (!isSectionAccessibilityActive) {
-                handleNavigationChange('settings', 'accessibility');
-            }
-        });
-    }
-
-    if (toggleSectionPurchaseHistoryFromSettingsButton) {
-        toggleSectionPurchaseHistoryFromSettingsButton.addEventListener('click', () => {
-            if (!isSectionPurchaseHistoryActive) {
-                handleNavigationChange('settings', 'purchaseHistory');
-            }
-        });
-    }
-
-    // Navigation from help surface
-    if (toggleSectionHomeFromHelpButton) {
-        toggleSectionHomeFromHelpButton.addEventListener('click', () => {
-            handleNavigationChange('home');
-        });
-    }
-
-    if (toggleSectionPrivacyButton) {
-        toggleSectionPrivacyButton.addEventListener('click', () => {
-            if (!isSectionPrivacyActive) {
-                handleNavigationChange('help', 'privacy');
-            }
-        });
-    }
-
-    if (toggleSectionTermsButton) {
-        toggleSectionTermsButton.addEventListener('click', () => {
-            if (!isSectionTermsActive) {
-                handleNavigationChange('help', 'terms');
-            }
-        });
-    }
-
-    if (toggleSectionCookiesButton) {
-        toggleSectionCookiesButton.addEventListener('click', () => {
-            if (!isSectionCookiesActive) {
-                handleNavigationChange('help', 'cookies');
-            }
-        });
-    }
-
-    if (toggleSectionSuggestionsButton) {
-        toggleSectionSuggestionsButton.addEventListener('click', () => {
-            if (!isSectionSuggestionsActive) {
-                handleNavigationChange('help', 'suggestions');
-            }
-        });
-    }
-
-    // Click outside to close menus
-    if (closeOnClickOutside) {
-        document.addEventListener('click', (e) => {
-            if (isAnimating) return;
-            let optionsStateChanged = false;
-            let surfaceStateChanged = false;
-
-            if (isModuleOptionsActive) {
-                if (window.innerWidth <= 468) {
-                    if (e.target === moduleOptions) {
-                        optionsStateChanged = closeMenuOptions();
-                    }
-                } else {
-                    if (!moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
-                        optionsStateChanged = closeMenuOptions();
-                    }
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const previouslyActiveSelector = activeSelector;
+                
+                // Close all other selectors
+                if (activeSelector && activeSelector !== selector) {
+                    activeSelector.classList.remove('active');
                 }
-            }
+                
+                // Toggle the current one
+                selector.classList.toggle('active');
+                
+                // Update the global state
+                activeSelector = selector.classList.contains('active') ? selector : null;
 
-            if (isModuleSurfaceActive && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
-                surfaceStateChanged = closeMenuSurface();
-            }
-
-            if (optionsStateChanged || surfaceStateChanged) {
-                updateLogState();
-            }
-        });
-    }
-
-    // Close with Escape key
-    if (closeOnEscape) {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const optionsClosed = closeMenuOptions();
-                const surfaceClosed = closeMenuSurface();
-                if (optionsClosed || surfaceClosed) {
+                // Log only if the overall state of having an active selector changes
+                if ((!previouslyActiveSelector && activeSelector) || (previouslyActiveSelector && !activeSelector)) {
                     updateLogState();
                 }
-            }
-        });
-    }
+            });
 
-    window.addEventListener('resize', handleResize);
-    initDragController(closeMenuOptions, () => isAnimating);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const allLinks = selector.querySelectorAll('.menu-link');
+                    allLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    selectedValue.textContent = link.querySelector('.menu-link-text span').textContent;
+                    if(closeAllSelectors()) {
+                        updateLogState();
+                    }
+                });
+            });
+        });
+
+        // --- Profile Edit/View State Toggle ---
+        document.querySelectorAll('[data-action="toggleEditState"]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const parent = e.target.closest('.profile-card-item');
+                parent.querySelector('.view-state').classList.add('hidden');
+                parent.querySelector('.edit-state').classList.remove('hidden');
+            });
+        });
+
+        document.querySelectorAll('[data-action="toggleViewState"]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const parent = e.target.closest('.profile-card-item');
+                parent.querySelector('.edit-state').classList.add('hidden');
+                parent.querySelector('.view-state').classList.remove('hidden');
+            });
+        });
+
+
+        // Main navigation
+        if (toggleSectionHomeButton) {
+            toggleSectionHomeButton.addEventListener('click', () => {
+                if (!isSectionHomeActive) handleNavigationChange('home');
+            });
+        }
+
+        if (toggleSectionExploreButton) {
+            toggleSectionExploreButton.addEventListener('click', () => {
+                if (!isSectionExploreActive) handleNavigationChange('explore');
+            });
+        }
+
+        // Navigation from options menu
+        if (toggleSectionSettingsButton) {
+            toggleSectionSettingsButton.addEventListener('click', () => {
+                handleNavigationChange('settings', 'profile');
+                closeMenuOptions();
+            });
+        }
+
+        if (toggleSectionHelpButton) {
+            toggleSectionHelpButton.addEventListener('click', () => {
+                handleNavigationChange('help', 'privacy');
+                closeMenuOptions();
+            });
+        }
+
+        if (toggleSectionPurchaseHistoryButton) {
+            toggleSectionPurchaseHistoryButton.addEventListener('click', () => {
+                handleNavigationChange('settings', 'purchaseHistory');
+                closeMenuOptions();
+            });
+        }
+
+        // Navigation from settings surface
+        if (toggleSectionHomeFromSettingsButton) {
+            toggleSectionHomeFromSettingsButton.addEventListener('click', () => handleNavigationChange('home'));
+        }
+        if (toggleSectionProfileButton) {
+            toggleSectionProfileButton.addEventListener('click', () => {
+                if (!isSectionProfileActive) handleNavigationChange('settings', 'profile');
+            });
+        }
+        if (toggleSectionLoginButton) {
+            toggleSectionLoginButton.addEventListener('click', () => {
+                if (!isSectionLoginActive) handleNavigationChange('settings', 'login');
+            });
+        }
+        if (toggleSectionAccessibilityButton) {
+            toggleSectionAccessibilityButton.addEventListener('click', () => {
+                if (!isSectionAccessibilityActive) handleNavigationChange('settings', 'accessibility');
+            });
+        }
+        if (toggleSectionPurchaseHistoryFromSettingsButton) {
+            toggleSectionPurchaseHistoryFromSettingsButton.addEventListener('click', () => {
+                if (!isSectionPurchaseHistoryActive) handleNavigationChange('settings', 'purchaseHistory');
+            });
+        }
+
+        // Navigation from help surface
+        if (toggleSectionHomeFromHelpButton) {
+            toggleSectionHomeFromHelpButton.addEventListener('click', () => handleNavigationChange('home'));
+        }
+        if (toggleSectionPrivacyButton) {
+            toggleSectionPrivacyButton.addEventListener('click', () => {
+                if (!isSectionPrivacyActive) handleNavigationChange('help', 'privacy');
+            });
+        }
+        if (toggleSectionTermsButton) {
+            toggleSectionTermsButton.addEventListener('click', () => {
+                if (!isSectionTermsActive) handleNavigationChange('help', 'terms');
+            });
+        }
+        if (toggleSectionCookiesButton) {
+            toggleSectionCookiesButton.addEventListener('click', () => {
+                if (!isSectionCookiesActive) handleNavigationChange('help', 'cookies');
+            });
+        }
+        if (toggleSectionSuggestionsButton) {
+            toggleSectionSuggestionsButton.addEventListener('click', () => {
+                if (!isSectionSuggestionsActive) handleNavigationChange('help', 'suggestions');
+            });
+        }
+
+        // Click outside to close menus
+        if (closeOnClickOutside) {
+            document.addEventListener('click', (e) => {
+                if (isAnimating) return;
+                let stateChanged = false;
+
+                if (isModuleOptionsActive) {
+                    if (window.innerWidth <= 468) {
+                        if (e.target === moduleOptions) {
+                            stateChanged = closeMenuOptions() || stateChanged;
+                        }
+                    } else {
+                        if (!moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
+                            stateChanged = closeMenuOptions() || stateChanged;
+                        }
+                    }
+                }
+
+                if (isModuleSurfaceActive && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
+                    stateChanged = closeMenuSurface() || stateChanged;
+                }
+
+                if (activeSelector && !activeSelector.contains(e.target)) {
+                    stateChanged = closeAllSelectors() || stateChanged;
+                }
+
+                if (stateChanged) {
+                    updateLogState();
+                }
+            });
+        }
+
+        // Close with Escape key
+        if (closeOnEscape) {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const optionsClosed = closeMenuOptions();
+                    const surfaceClosed = closeMenuSurface();
+                    const selectorClosed = closeAllSelectors();
+                    if (optionsClosed || surfaceClosed || selectorClosed) {
+                        updateLogState();
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('resize', handleResize);
+    }
     
-    // Initialize state based on current URL
+    // Initialize everything
+    setupEventListeners();
+    initDragController(closeMenuOptions, () => isAnimating);
     updateLogState();
-    console.log('ProjectLeviathan initialized with URL routing support');
+    console.log('ProjectLeviathan initialized with URL routing and dynamic modules support');
 }
 
 export { initMainController };
