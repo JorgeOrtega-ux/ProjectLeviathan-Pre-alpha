@@ -32,10 +32,12 @@
                     <div class="profile-card-content">
                         <div class="profile-card-info allow-wrap">
                             <strong>Cerrar sesión en todos los dispositivos</strong>
-                            <span>¿Iniciaste sesión en un dispositivo de uso compartido y olvidaste cerrar sesión? No hay problema: puedes cerrar sesión en todos tus dispositivos.</span>
+                            <div class="logout-everywhere-section">
+                                <span>¿Crees que olvidaste cerrar sesión en otro lugar? Protege tu cuenta cerrando todas las sesiones activas ahora mismo.</span>
+                            </div>
                         </div>
                     </div>
-                    <button class="edit-button">Cerrar sesión en todos</button>
+                    <button class="edit-button">Cerrar todas las sesiones</button>
                 </div>
             </div>
             <div class="profile-card-item column-layout">
@@ -43,7 +45,12 @@
                     <div class="profile-card-content">
                         <div class="profile-card-info allow-wrap">
                             <strong>Eliminar tu cuenta</strong>
-                            <span>Si eliminas tu cuenta, ya no podrás acceder a ninguno de tus diseños ni iniciar sesión.</span>
+                            <div class="delete-account-warning">
+                                <p>Esta acción es permanente y no se puede deshacer. Al continuar, perderás el acceso a todas tus comunidades, y cualquier contenido que hayas guardado.</p>
+                                <p class="account-creation-date">
+                                    <strong>Tu cuenta se creó el:</strong> 31 de octubre de 2023 a las 7:52 p.m.
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <button class="edit-button">Eliminar cuenta</button>

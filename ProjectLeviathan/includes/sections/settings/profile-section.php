@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div class="profile-card-item" data-section="email">
+            <div class="profile-card-item with-divider" data-section="email">
                 <div class="view-state">
                     <div class="profile-card-content">
                         <div class="profile-card-info">
@@ -69,6 +69,16 @@
                                 <button class="cancel-button" data-action="toggleViewState">Cancelar</button>
                                 <button class="save-button" data-action="toggleViewState">Guardar</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-card-item" data-section="phone">
+                <div class="view-state">
+                    <div class="profile-card-content">
+                        <div class="profile-card-info">
+                            <strong>Número de teléfono</strong>
+                            <span>+52 81 1234 5678</span>
                         </div>
                     </div>
                 </div>
