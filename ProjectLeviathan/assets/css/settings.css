@@ -166,8 +166,9 @@
     outline: none;
 }
 
+.edit-input:hover,
 .edit-input:focus {
-    border: 1px solid #000000;
+    border-color: #000000;
 }
 
 .edit-actions {
@@ -471,9 +472,9 @@ input:checked~.material-symbols-rounded {
     font-size: 0.95rem;
     width: 250px;
     outline: none;
-    transition: border-color 0.2s;
 }
 
+.search-input-wrapper input:hover,
 .search-input-wrapper input:focus {
     border-color: #000;
 }

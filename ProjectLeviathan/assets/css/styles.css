@@ -423,7 +423,6 @@ body {
     font-weight: 500;
     padding: 12px 24px;
     text-decoration: none;
-    transition: background-color 0.2s ease;
 }
 .general-content-top.shadow {
     border-bottom: 1px solid transparent;
