@@ -81,8 +81,8 @@
             <div class="profile-card-item toggle-item">
                 <div class="profile-card-content">
                     <div class="profile-card-info allow-wrap">
-                        <strong>Subtítulos</strong>
-                        <span>Los subtítulos se generarán y se mostrarán en todo el contenido que tenga audios o videos con diálogo.</span>
+                        <strong>Aumenta el tiempo de permanencia de un mensaje en la pantalla.</strong>
+                        <span>Los mensajes permanecerán más tiempo en pantalla antes de desaparecer.</span>
                     </div>
                 </div>
                 <label class="toggle-switch">

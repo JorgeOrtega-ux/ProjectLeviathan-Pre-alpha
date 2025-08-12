@@ -165,8 +165,8 @@
             <div class="profile-card-item with-divider toggle-item">
                 <div class="profile-card-content">
                     <div class="profile-card-info allow-wrap">
-                        <strong>Abrir los diseños en una pestaña nueva</strong>
-                        <span>En el navegador web, los diseños siempre se abrirán en una pestaña nueva.</span>
+                        <strong>Abrir los enlaces en una pestaña nueva</strong>
+                        <span>En el navegador web, los enlaces siempre se abrirán en una pestaña nueva.</span>
                     </div>
                 </div>
                 <label class="toggle-switch">
@@ -178,8 +178,8 @@
             <div class="profile-card-item toggle-item">
                 <div class="profile-card-content">
                     <div class="profile-card-info allow-wrap">
-                        <strong>Abrir enlaces en la app para escritorio</strong>
-                        <span>Los enlaces de la web se abren en la app para escritorio, no en tu navegador web.</span>
+                        <strong>Mostrar contenido sensible</strong>
+                        <span>Permite la visualización de contenido que puede incluir lenguaje fuerte o temas para un público maduro.</span>
                     </div>
                 </div>
                 <label class="toggle-switch">
