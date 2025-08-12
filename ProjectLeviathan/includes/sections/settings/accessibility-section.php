@@ -65,24 +65,11 @@
                     <span class="material-symbols-rounded">done</span>
                 </label>
             </div>
-            <div class="profile-card-item with-divider toggle-item">
+            <div class="profile-card-item toggle-item">
                 <div class="profile-card-content">
                     <div class="profile-card-info allow-wrap">
                         <strong>Contraste alto de colores</strong>
                         <span>Se mantiene un mayor contraste entre el texto y el fondo, incluidos los fondos con degradados.</span>
-                    </div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox">
-                    <span class="toggle-slider"></span>
-                    <span class="material-symbols-rounded">done</span>
-                </label>
-            </div>
-            <div class="profile-card-item toggle-item">
-                <div class="profile-card-content">
-                    <div class="profile-card-info allow-wrap">
-                        <strong>Aumenta el tiempo de permanencia de un mensaje en la pantalla.</strong>
-                        <span>Los mensajes permanecerán más tiempo en pantalla antes de desaparecer.</span>
                     </div>
                 </div>
                 <label class="toggle-switch">

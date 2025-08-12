@@ -38,6 +38,7 @@
     justify-content: space-between;
     padding: 20px;
     min-height: 90px;
+    position: relative;
 }
 
 .profile-card-item-column {
@@ -76,19 +77,6 @@
     color: #333;
 }
 
-.profile-avatar-container {
-    margin-right: 16px;
-}
-
-.profile-avatar-container .profile-container {
-    width: 50px;
-    height: 50px;
-}
-
-.profile-avatar-container .profile-content {
-    font-size: 24px;
-}
-
 .profile-card-info {
     display: flex;
     flex-direction: column;
@@ -103,9 +91,6 @@
     font-weight: 500;
     color: #333;
     margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .profile-card-info span {
@@ -119,6 +104,46 @@
     white-space: normal;
     overflow: visible;
     text-overflow: initial;
+}
+
+.emblem-container {
+    flex-shrink: 0;
+    margin-left: 16px;
+}
+
+.emblem-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.emblem-content.rank-owner {
+    background-color: #7851a9;
+}
+
+.emblem-content.rank-admin {
+    background-color: #ff0000;
+}
+
+.emblem-content.rank-community-manager {
+    background-color: #28a745;
+}
+
+.emblem-content.rank-moderator {
+    background-color: #007bff;
+}
+
+.emblem-content.rank-support-team {
+    background-color: #ffc107;
+}
+
+.emblem-content.rank-user {
+    background-color: #6c757d;
 }
 
 .hidden {
@@ -379,141 +404,18 @@ input:checked~.material-symbols-rounded {
     transform: translateX(20px);
 }
 
-.purchase-history-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 24px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.purchase-history-container .profile-card {
-    margin-bottom: 24px; 
-}
-
-.purchase-filters {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    align-items: flex-end;
-}
-
-.filter-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.filter-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #555;
-    margin-bottom: 8px;
-}
-
-.search-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-input-wrapper .material-symbols-rounded {
-    position: absolute;
-    left: 12px;
-    color: #666;
-    font-size: 20px;
-}
-
-.search-input-wrapper input {
-    height: 40px;
-    border: 1px solid #00000020;
-    border-radius: 8px;
-    padding-left: 40px;
-    font-size: 0.95rem;
-    width: 250px;
-    outline: none;
-}
-
-.search-input-wrapper input:hover,
-.search-input-wrapper input:focus {
-    border-color: #000;
-}
-
-.filter-group .profile-control-group {
-    width: 250px;
-    margin-top: 0;
-}
-
-.purchase-table-wrapper {
-    flex-grow: 1;
-    overflow-x: auto;
-    border: 1px solid #00000020;
-    border-radius: 12px;
-    background-color: #fff;
-}
-
-.purchase-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.purchase-table th,
-.purchase-table td {
-    padding: 16px 20px;
-    text-align: left;
-    font-size: 0.9rem;
-    color: #333;
-    border-bottom: 1px solid #00000020;
-    transition: all 0.2s ease;
-}
-
-.purchase-table thead th {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #666;
-    background-color: transparent;
-}
-
-.purchase-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.purchase-table .text-right {
-    text-align: right;
-}
-
-.status-pill {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    line-height: 1.4;
-    text-align: center;
-}
-
-.status-pill.status-paid,
-.status-pill.status-refunded {
-    background-color: transparent;
-    color: #000;
-    border: 1px solid #00000020;
-}
 
 /* --- ESTILOS RESPONSIVOS PARA PROFILE --- */
 @media (max-width: 468px) {
-    .avatar-layout .profile-card-content {
+    .profile-card-item {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
+        gap: 12px;
     }
 
-    .avatar-layout .profile-avatar-container {
-        margin-right: 0;
-        margin-bottom: 16px;
-    }
-
-    .avatar-layout .profile-card-info {
-        text-align: center;
+    .emblem-container {
+        margin-left: 0;
+        align-self: flex-start;
     }
     
     .edit-input-group {
@@ -538,100 +440,5 @@ input:checked~.material-symbols-rounded {
     .toggle-item .toggle-switch {
         margin-left: 0;
         align-self: flex-end;
-    }
-}
-
-/* --- ESTILOS PARA TABLA EXPANDIBLE --- */
-@media (max-width: 768px) {
-    .purchase-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-input-wrapper input,
-    .filter-group .profile-control-group {
-        width: 100%;
-    }
-    
-    .purchase-table-wrapper {
-        border: none;
-        background-color: transparent;
-        overflow-x: hidden;
-    }
-
-    .purchase-table thead {
-        display: none;
-    }
-    
-    .purchase-table tbody, .purchase-table tr {
-        display: block;
-        width: 100%;
-    }
-
-    .purchase-table tr.purchase-item {
-        border: 1px solid #00000020;
-        border-radius: 12px;
-        margin-bottom: 12px;
-        background-color: #fff;
-    }
-
-    .purchase-table td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: none;
-        padding: 12px 16px;
-    }
-    
-    .purchase-table td::before {
-        content: attr(data-label);
-        font-weight: 500;
-        color: #555;
-        margin-right: 16px;
-    }
-
-    .purchase-table tr.is-expandable td:first-child {
-        font-weight: bold;
-        cursor: pointer;
-        position: relative;
-    }
-    
-    .purchase-table tr.is-expandable td:first-child::after {
-        content: 'expand_more';
-        font-family: 'Material Symbols Rounded';
-        font-weight: normal;
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%) rotate(0deg);
-        transition: transform 0.3s ease;
-    }
-    
-    .purchase-table tr.is-expandable.active td:first-child::after {
-        transform: translateY(-50%) rotate(180deg);
-    }
-    
-    .purchase-table tr.is-expandable td:first-child::before {
-        display: none;
-    }
-
-    .purchase-table tr.is-expandable td.expand-detail {
-        max-height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        overflow: hidden;
-        border-bottom: 1px solid #f0f0f0;
-        opacity: 0;
-    }
-    
-    .purchase-table tr.is-expandable td.expand-detail:last-of-type {
-       border-bottom: none;
-    }
-
-    .purchase-table tr.is-expandable.active td.expand-detail {
-        max-height: 50px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        opacity: 1;
     }
 }

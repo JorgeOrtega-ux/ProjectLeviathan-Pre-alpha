@@ -20,7 +20,6 @@ function initMainController() {
     let isSectionProfileActive = initialState ? initialState.subsection === 'profile' : false;
     let isSectionLoginActive = initialState ? initialState.subsection === 'login' : false;
     let isSectionAccessibilityActive = initialState ? initialState.subsection === 'accessibility' : false;
-    let isSectionPurchaseHistoryActive = initialState ? initialState.subsection === 'purchaseHistory' : false;
     
     let isSectionPrivacyActive = initialState ? initialState.subsection === 'privacy' : false;
     let isSectionTermsActive = initialState ? initialState.subsection === 'terms' : false;
@@ -44,7 +43,6 @@ function initMainController() {
     const sectionProfile = document.querySelector('[data-section="sectionProfile"]');
     const sectionLogin = document.querySelector('[data-section="sectionLogin"]');
     const sectionAccessibility = document.querySelector('[data-section="sectionAccessibility"]');
-    const sectionPurchaseHistory = document.querySelector('[data-section="sectionPurchaseHistory"]');
     
     const sectionPrivacy = document.querySelector('[data-section="sectionPrivacy"]');
     const sectionTerms = document.querySelector('[data-section="sectionTerms"]');
@@ -56,13 +54,11 @@ function initMainController() {
     
     const toggleSectionSettingsButton = document.querySelector('[data-action="toggleSectionSettings"]');
     const toggleSectionHelpButton = document.querySelector('[data-action="toggleSectionHelp"]');
-    const toggleSectionPurchaseHistoryButton = document.querySelector('[data-action="toggleSectionPurchaseHistory"]');
     
     const toggleSectionHomeFromSettingsButton = document.querySelector('[data-action="toggleSectionHomeFromSettings"]');
     const toggleSectionProfileButton = document.querySelector('[data-action="toggleSectionProfile"]');
     const toggleSectionLoginButton = document.querySelector('[data-action="toggleSectionLogin"]');
     const toggleSectionAccessibilityButton = document.querySelector('[data-action="toggleSectionAccessibility"]');
-    const toggleSectionPurchaseHistoryFromSettingsButton = document.querySelector('[data-action="toggleSectionPurchaseHistoryFromSettings"]');
     
     const toggleSectionHomeFromHelpButton = document.querySelector('[data-action="toggleSectionHomeFromHelp"]');
     const toggleSectionPrivacyButton = document.querySelector('[data-action="toggleSectionPrivacy"]');
@@ -89,7 +85,6 @@ function initMainController() {
             '── Sub-sections (Settings) ──': { section: 'Profile', status: toState(isSectionProfileActive) },
             '      ': { section: 'Login', status: toState(isSectionLoginActive) },
             '       ': { section: 'Accessibility', status: toState(isSectionAccessibilityActive) },
-            '        ': { section: 'Purchase History', status: toState(isSectionPurchaseHistoryActive) },
             '── Sub-sections (Help) ──': { section: 'Privacy Policy', status: toState(isSectionPrivacyActive) },
             '         ': { section: 'Terms & Conditions', status: toState(isSectionTermsActive) },
             '          ': { section: 'Cookies Policy', status: toState(isSectionCookiesActive) },
@@ -250,7 +245,7 @@ function initMainController() {
     };
 
     const updateSettingsMenuButtons = (activeButton) => {
-        [toggleSectionProfileButton, toggleSectionLoginButton, toggleSectionAccessibilityButton, toggleSectionPurchaseHistoryFromSettingsButton].forEach(button => {
+        [toggleSectionProfileButton, toggleSectionLoginButton, toggleSectionAccessibilityButton].forEach(button => {
             if (button) button.classList.remove('active');
         });
         if (activeButton) {
@@ -284,7 +279,6 @@ function initMainController() {
             isSectionProfileActive = false;
             isSectionLoginActive = false;
             isSectionAccessibilityActive = false;
-            isSectionPurchaseHistoryActive = false;
         }
 
         if (activeStateSetter !== 'help') {
@@ -321,8 +315,7 @@ function initMainController() {
             let subsection = null;
             if (isSectionSettingsActive) {
                 subsection = isSectionProfileActive ? 'profile' :
-                    isSectionLoginActive ? 'login' :
-                    isSectionAccessibilityActive ? 'accessibility' : 'purchaseHistory';
+                    isSectionLoginActive ? 'login' : 'accessibility';
             } else if (isSectionHelpActive) {
                 subsection = isSectionPrivacyActive ? 'privacy' :
                     isSectionTermsActive ? 'terms' :
@@ -348,7 +341,6 @@ function initMainController() {
         isSectionProfileActive = activeStateSetter === 'profile';
         isSectionLoginActive = activeStateSetter === 'login';
         isSectionAccessibilityActive = activeStateSetter === 'accessibility';
-        isSectionPurchaseHistoryActive = activeStateSetter === 'purchaseHistory';
 
         isSectionPrivacyActive = activeStateSetter === 'privacy';
         isSectionTermsActive = activeStateSetter === 'terms';
@@ -373,17 +365,14 @@ function initMainController() {
 
             const sub = subsection || 'profile';
             if (sub === 'profile') {
-                setSubSectionActive(sectionProfile, [sectionLogin, sectionAccessibility, sectionPurchaseHistory],
-                    toggleSectionProfileButton, [toggleSectionLoginButton, toggleSectionAccessibilityButton, toggleSectionPurchaseHistoryFromSettingsButton], 'profile', updateUrl);
+                setSubSectionActive(sectionProfile, [sectionLogin, sectionAccessibility],
+                    toggleSectionProfileButton, [toggleSectionLoginButton, toggleSectionAccessibilityButton], 'profile', updateUrl);
             } else if (sub === 'login') {
-                setSubSectionActive(sectionLogin, [sectionProfile, sectionAccessibility, sectionPurchaseHistory],
-                    toggleSectionLoginButton, [toggleSectionProfileButton, toggleSectionAccessibilityButton, toggleSectionPurchaseHistoryFromSettingsButton], 'login', updateUrl);
+                setSubSectionActive(sectionLogin, [sectionProfile, sectionAccessibility],
+                    toggleSectionLoginButton, [toggleSectionProfileButton, toggleSectionAccessibilityButton], 'login', updateUrl);
             } else if (sub === 'accessibility') {
-                setSubSectionActive(sectionAccessibility, [sectionProfile, sectionLogin, sectionPurchaseHistory],
-                    toggleSectionAccessibilityButton, [toggleSectionProfileButton, toggleSectionLoginButton, toggleSectionPurchaseHistoryFromSettingsButton], 'accessibility', updateUrl);
-            } else if (sub === 'purchaseHistory') {
-                setSubSectionActive(sectionPurchaseHistory, [sectionProfile, sectionLogin, sectionAccessibility],
-                    toggleSectionPurchaseHistoryFromSettingsButton, [toggleSectionProfileButton, toggleSectionLoginButton, toggleSectionAccessibilityButton], 'purchaseHistory', updateUrl);
+                setSubSectionActive(sectionAccessibility, [sectionProfile, sectionLogin],
+                    toggleSectionAccessibilityButton, [toggleSectionProfileButton, toggleSectionLoginButton], 'accessibility', updateUrl);
             }
         } else if (section === 'help') {
             setSectionActive(sectionHelp, [sectionHome, sectionExplore, sectionSettings], 'help', false);
@@ -564,12 +553,6 @@ function initMainController() {
                 closeMenuOptions();
             });
         }
-        if (toggleSectionPurchaseHistoryButton) {
-            toggleSectionPurchaseHistoryButton.addEventListener('click', () => {
-                handleNavigationChange('settings', 'purchaseHistory');
-                closeMenuOptions();
-            });
-        }
         if (toggleSectionHomeFromSettingsButton) {
             toggleSectionHomeFromSettingsButton.addEventListener('click', () => handleNavigationChange('home'));
         }
@@ -586,11 +569,6 @@ function initMainController() {
         if (toggleSectionAccessibilityButton) {
             toggleSectionAccessibilityButton.addEventListener('click', () => {
                 if (!isSectionAccessibilityActive) handleNavigationChange('settings', 'accessibility');
-            });
-        }
-        if (toggleSectionPurchaseHistoryFromSettingsButton) {
-            toggleSectionPurchaseHistoryFromSettingsButton.addEventListener('click', () => {
-                if (!isSectionPurchaseHistoryActive) handleNavigationChange('settings', 'purchaseHistory');
             });
         }
         if (toggleSectionHomeFromHelpButton) {

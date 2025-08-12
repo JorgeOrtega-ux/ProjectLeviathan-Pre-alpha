@@ -7,7 +7,6 @@ class Router {
         'settings/your-account' => ['section' => 'settings', 'subsection' => 'profile'],
         'settings/login' => ['section' => 'settings', 'subsection' => 'login'],
         'settings/accessibility' => ['section' => 'settings', 'subsection' => 'accessibility'],
-        'settings/purchase-history' => ['section' => 'settings', 'subsection' => 'purchaseHistory'],
         'help' => ['section' => 'help', 'subsection' => 'privacy'],
         'help/privacy' => ['section' => 'help', 'subsection' => 'privacy'],
         'help/terms' => ['section' => 'help', 'subsection' => 'terms'],

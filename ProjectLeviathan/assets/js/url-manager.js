@@ -9,7 +9,6 @@ function initUrlManager() {
         'settings-profile': 'settings/your-account',
         'settings-login': 'settings/login',
         'settings-accessibility': 'settings/accessibility',
-        'settings-purchaseHistory': 'settings/purchase-history',
         'help-privacy': 'help/privacy',
         'help-terms': 'help/terms',
         'help-cookies': 'help/cookies',
@@ -37,9 +36,6 @@ function generateUrl(section, subsection = null) {
                 break;
             case 'accessibility':
                 path = 'settings/accessibility';
-                break;
-            case 'purchaseHistory':
-                path = 'settings/purchase-history';
                 break;
             default:
                 path = 'settings/your-account';

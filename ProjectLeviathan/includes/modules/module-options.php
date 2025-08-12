@@ -21,14 +21,6 @@
                         <span>Ayuda y recursos</span>
                     </div>
                 </div>
-                <div class="menu-link" data-action="toggleSectionPurchaseHistory">
-                    <div class="menu-link-icon">
-                        <span class="material-symbols-rounded">shopping_cart</span>
-                    </div>
-                    <div class="menu-link-text">
-                        <span>Historial de compras</span>
-                    </div>
-                </div>
                 <div class="menu-link">
                     <div class="menu-link-icon">
                         <span class="material-symbols-rounded">exit_to_app</span>

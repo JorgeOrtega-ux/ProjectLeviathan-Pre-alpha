@@ -17,7 +17,6 @@
             <?php include 'includes/sections/settings/profile-section.php'; ?>
             <?php include 'includes/sections/settings/login-section.php'; ?>
             <?php include 'includes/sections/settings/accessibility-section.php'; ?>
-            <?php include 'includes/sections/settings/purchaseHistory-section.php'; ?>
         </div>
         <div class="section-content <?php echo $CURRENT_SECTION === 'help' ? 'active' : 'disabled'; ?>" data-section="sectionHelp">
             <?php include 'includes/sections/help/privacy-section.php'; ?>

@@ -10,18 +10,17 @@
         </div>
 
         <div class="profile-card">
-            <div class="profile-card-item avatar-layout">
+            <div class="profile-card-item">
                 <div class="profile-card-content">
-                    <div class="profile-avatar-container">
-                        <div class="profile-container rank-owner">
-                            <div class="profile-content">
-                                <span class="material-symbols-rounded">shield</span>
-                            </div>
-                        </div>
+                    <div class="profile-card-info">
+                        <strong>Emblema</strong>
+                        <span>Este es el emblema que representa tu rango en la plataforma.</span>
                     </div>
-                    <div class="profile-card-info allow-wrap">
-                        <strong>Avatar de Perfil</strong>
-                        <span>Tu avatar se asigna automáticamente basado en tu rango.</span>
+                </div>
+                <div class="emblem-container">
+                    <div class="emblem-content rank-owner">
+                        <span class="material-symbols-rounded">shield</span>
+                        <span>Propietario</span>
                     </div>
                 </div>
             </div>

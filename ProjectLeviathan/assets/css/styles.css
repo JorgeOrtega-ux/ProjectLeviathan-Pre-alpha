@@ -145,11 +145,11 @@ body {
 }
 
 .rank-owner .profile-content {
-    background-color: #ff6b35;
+    background-color: #7851a9;
 }
 
 .rank-admin .profile-content {
-    background-color: #dc3545;
+    background-color: #ff0000;
 }
 
 .rank-community-manager .profile-content {
@@ -169,11 +169,11 @@ body {
 }
 
 .rank-owner {
-    background: conic-gradient(from -120deg, #fbbc04 0deg 60deg, #ff6b35 60deg 150deg, #4285f4 150deg 270deg, #34a853 270deg 360deg);
+    background: #7851a9;
 }
 
 .rank-admin {
-    background: #dc3545;
+    background: #ff0000;
 }
 
 .rank-community-manager {

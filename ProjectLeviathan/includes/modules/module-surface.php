@@ -53,14 +53,6 @@
                     <span>Accesibilidad</span>
                 </div>
             </div>
-            <div class="menu-link <?php echo ($CURRENT_SUBSECTION === 'purchaseHistory') ? 'active' : ''; ?>" data-action="toggleSectionPurchaseHistoryFromSettings">
-                <div class="menu-link-icon">
-                    <span class="material-symbols-rounded">shopping_cart</span>
-                </div>
-                <div class="menu-link-text">
-                    <span>Historial de Compras</span>
-                </div>
-            </div>
         </div>
     </div>
     <div class="menu-content overflow-y disabled" data-surface-type="help">

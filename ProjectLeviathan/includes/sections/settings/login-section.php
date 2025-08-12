@@ -38,17 +38,6 @@
                     <button class="edit-button">Cerrar sesión en todos</button>
                 </div>
             </div>
-            <div class="profile-card-item with-divider column-layout">
-                <div class="view-state">
-                    <div class="profile-card-content">
-                        <div class="profile-card-info allow-wrap">
-                            <strong>Descarga tus archivos subidos y diseños</strong>
-                            <span>Aquí puedes solicitar la descarga de tus archivos subidos y diseños.</span>
-                        </div>
-                    </div>
-                    <button class="edit-button">Solicitud de descarga</button>
-                </div>
-            </div>
             <div class="profile-card-item column-layout">
                 <div class="view-state">
                     <div class="profile-card-content">
