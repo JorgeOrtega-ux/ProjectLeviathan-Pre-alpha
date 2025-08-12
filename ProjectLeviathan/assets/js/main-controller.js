@@ -646,9 +646,22 @@ function initMainController() {
             document.addEventListener('click', (e) => {
                 if (isAnimating) return;
                 const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
-                if (moduleOptions.classList.contains('active') && !moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
-                    closeMenuOptions();
+
+                // --- INICIO: CÓDIGO CORREGIDO ---
+                if (moduleOptions.classList.contains('active') && !toggleOptionsButton.contains(e.target)) {
+                    if (window.innerWidth <= 468) {
+                        // En móvil, cierra si se hace clic en la superposición (el propio módulo)
+                        if (e.target === moduleOptions) {
+                            closeMenuOptions();
+                        }
+                    } else {
+                        // En escritorio, cierra si se hace clic fuera del módulo
+                        if (!moduleOptions.contains(e.target)) {
+                            closeMenuOptions();
+                        }
+                    }
                 }
+                // --- FIN: CÓDIGO CORREGIDO ---
                 
                 if (activeSelector) {
                      if (window.innerWidth <= 468) {
