@@ -100,7 +100,7 @@ function initMainController() {
         const tableData = {
             '── Modules ──': { section: 'Module Options', status: toState(isModuleOptionsActive) },
             ' ': { section: 'Module Surface', status: toState(isModuleSurfaceActive) },
-            '  ': { section: 'Active Selector', status: activeSelector ? '✅ Activo' : '❌ Inactivo' },
+            '  ': { section: 'Active Selector', status: toState(activeSelector) },
             '── Sections ──': { section: 'Home', status: toState(isSectionHomeActive) },
             '   ': { section: 'Explore', status: toState(isSectionExploreActive) },
             '    ': { section: 'Settings', status: toState(isSectionSettingsActive) },
@@ -120,21 +120,18 @@ function initMainController() {
     };
 
     const setMenuOptionsClosed = () => {
+        isModuleOptionsActive = false;
         moduleOptions.classList.add('disabled');
-        moduleOptions.classList.remove('active');
+        moduleOptions.classList.remove('active', 'fade-out');
         menuContentOptions.classList.add('disabled');
         menuContentOptions.classList.remove('active');
-        isModuleOptionsActive = false;
     };
 
     const setMenuOptionsOpen = () => {
-        if (!allowMultipleActiveModules && isModuleSurfaceActive) {
-            setMenuSurfaceClosed();
-        }
+        isModuleOptionsActive = true;
         moduleOptions.classList.remove('disabled');
         moduleOptions.classList.add('active');
         menuContentOptions.classList.remove('disabled');
-        isModuleOptionsActive = true;
     };
 
     const closeMenuOptions = () => {
@@ -147,13 +144,16 @@ function initMainController() {
             moduleOptions.classList.add('fade-out');
             menuContentOptions.classList.remove('active');
 
-            moduleOptions.addEventListener('animationend', () => {
-                setMenuOptionsClosed();
-                moduleOptions.classList.remove('fade-out');
-                isAnimating = false;
+            moduleOptions.addEventListener('animationend', (e) => {
+                if (e.animationName === 'fadeOut') {
+                    setMenuOptionsClosed();
+                    isAnimating = false;
+                    updateLogState();
+                }
             }, { once: true });
         } else {
             setMenuOptionsClosed();
+            updateLogState();
         }
         return true;
     };
@@ -161,6 +161,11 @@ function initMainController() {
     const openMenuOptions = () => {
         if (isAnimating || isModuleOptionsActive) return false;
 
+        if (!allowMultipleActiveModules) {
+            if (closeAllSelectors()) updateLogState();
+            if (closeMenuSurface()) updateLogState();
+        }
+        
         setMenuOptionsOpen();
 
         if (window.innerWidth <= 468 && menuContentOptions) {
@@ -172,71 +177,84 @@ function initMainController() {
                 menuContentOptions.classList.add('active');
             });
 
-            moduleOptions.addEventListener('animationend', () => {
-                moduleOptions.classList.remove('fade-in');
-                isAnimating = false;
+            moduleOptions.addEventListener('animationend', (e) => {
+                if (e.animationName === 'fadeIn') {
+                    moduleOptions.classList.remove('fade-in');
+                    isAnimating = false;
+                }
             }, { once: true });
         } else {
             menuContentOptions.classList.add('active');
         }
+        updateLogState();
         return true;
     };
 
     const setMenuSurfaceClosed = () => {
+        isModuleSurfaceActive = false;
         moduleSurface.classList.add('disabled');
         moduleSurface.classList.remove('active');
-        surfaceMain.classList.add('disabled');
-        surfaceMain.classList.remove('active');
-        surfaceSettings.classList.add('disabled');
-        surfaceSettings.classList.remove('active');
-        surfaceHelp.classList.add('disabled');
-        surfaceHelp.classList.remove('active');
-        isModuleSurfaceActive = false;
     };
 
     const setMenuSurfaceOpen = () => {
-        if (!allowMultipleActiveModules && isModuleOptionsActive) {
-            setMenuOptionsClosed();
+        if (!allowMultipleActiveModules) {
+            if (closeAllSelectors()) updateLogState();
+            if (closeMenuOptions()) updateLogState();
         }
+        isModuleSurfaceActive = true;
         moduleSurface.classList.remove('disabled');
         moduleSurface.classList.add('active');
-        isModuleSurfaceActive = true;
-
-        if (isSectionSettingsActive) {
-            surfaceSettings.classList.remove('disabled');
-            surfaceSettings.classList.add('active');
-        } else if (isSectionHelpActive) {
-            surfaceHelp.classList.remove('disabled');
-            surfaceHelp.classList.add('active');
-        } else {
-            surfaceMain.classList.remove('disabled');
-            surfaceMain.classList.add('active');
-        }
     };
 
     const closeMenuSurface = () => {
         if (!isModuleSurfaceActive) return false;
         setMenuSurfaceClosed();
+        updateLogState();
         return true;
     };
 
     const openMenuSurface = () => {
         if (isModuleSurfaceActive) return false;
         setMenuSurfaceOpen();
+        updateLogState();
         return true;
     };
 
     const closeAllSelectors = () => {
-        if (activeSelector) {
-            activeSelector.classList.add('disabled');
-            activeSelector.classList.remove('active');
-            activeSelector = null;
+        if (isAnimating || !activeSelector) return false;
+
+        const selectorToClose = activeSelector;
+        const buttonToDeactivate = activeSelectorButton;
+        const menuContent = selectorToClose.querySelector('.menu-content');
+        
+        activeSelector = null;
+        activeSelectorButton = null;
+
+        const finalCleanup = () => {
+            selectorToClose.classList.add('disabled');
+            selectorToClose.classList.remove('active', 'fade-out');
+            if (buttonToDeactivate) {
+                buttonToDeactivate.classList.remove('active');
+            }
+        };
+
+        if (window.innerWidth <= 468 && menuContent) {
+            isAnimating = true;
+            menuContent.removeAttribute('style');
+            selectorToClose.classList.remove('fade-in');
+            selectorToClose.classList.add('fade-out');
+            menuContent.classList.remove('active');
+
+            selectorToClose.addEventListener('animationend', (e) => {
+                if (e.animationName === 'fadeOut') {
+                    finalCleanup();
+                    isAnimating = false;
+                }
+            }, { once: true });
+        } else {
+            finalCleanup();
         }
-        if (activeSelectorButton) {
-            activeSelectorButton.classList.remove('active');
-            activeSelectorButton = null;
-        }
-        return true; // Return true to indicate a potential state change
+        return true;
     };
 
     const updateMainMenuButtons = (activeButton) => {
@@ -319,13 +337,13 @@ function initMainController() {
         if (updateUrl) {
             let subsection = null;
             if (isSectionSettingsActive) {
-                subsection = isSectionProfileActive ? 'profile' : 
-                           isSectionLoginActive ? 'login' : 
-                           isSectionAccessibilityActive ? 'accessibility' : 'purchaseHistory';
+                subsection = isSectionProfileActive ? 'profile' :
+                    isSectionLoginActive ? 'login' :
+                    isSectionAccessibilityActive ? 'accessibility' : 'purchaseHistory';
             } else if (isSectionHelpActive) {
-                subsection = isSectionPrivacyActive ? 'privacy' : 
-                           isSectionTermsActive ? 'terms' : 
-                           isSectionCookiesActive ? 'cookies' : 'suggestions';
+                subsection = isSectionPrivacyActive ? 'privacy' :
+                    isSectionTermsActive ? 'terms' :
+                    isSectionCookiesActive ? 'cookies' : 'suggestions';
             }
             navigateToUrl(activeStateSetter, subsection);
         }
@@ -344,13 +362,11 @@ function initMainController() {
             button.classList.remove('active');
         });
 
-        // Settings subsections
         isSectionProfileActive = activeStateSetter === 'profile';
         isSectionLoginActive = activeStateSetter === 'login';
         isSectionAccessibilityActive = activeStateSetter === 'accessibility';
         isSectionPurchaseHistoryActive = activeStateSetter === 'purchaseHistory';
 
-        // Help subsections
         isSectionPrivacyActive = activeStateSetter === 'privacy';
         isSectionTermsActive = activeStateSetter === 'terms';
         isSectionCookiesActive = activeStateSetter === 'suggestions';
@@ -371,45 +387,45 @@ function initMainController() {
             updateMainMenuButtons(toggleSectionExploreButton);
         } else if (section === 'settings') {
             setSectionActive(sectionSettings, [sectionHome, sectionExplore, sectionHelp], 'settings', false);
-            
+
             const sub = subsection || 'profile';
             if (sub === 'profile') {
-                setSubSectionActive(sectionProfile, [sectionLogin, sectionAccessibility, sectionPurchaseHistory], 
+                setSubSectionActive(sectionProfile, [sectionLogin, sectionAccessibility, sectionPurchaseHistory],
                     toggleSectionProfileButton, [toggleSectionLoginButton, toggleSectionAccessibilityButton, toggleSectionPurchaseHistoryFromSettingsButton], 'profile', updateUrl);
             } else if (sub === 'login') {
-                setSubSectionActive(sectionLogin, [sectionProfile, sectionAccessibility, sectionPurchaseHistory], 
+                setSubSectionActive(sectionLogin, [sectionProfile, sectionAccessibility, sectionPurchaseHistory],
                     toggleSectionLoginButton, [toggleSectionProfileButton, toggleSectionAccessibilityButton, toggleSectionPurchaseHistoryFromSettingsButton], 'login', updateUrl);
             } else if (sub === 'accessibility') {
-                setSubSectionActive(sectionAccessibility, [sectionProfile, sectionLogin, sectionPurchaseHistory], 
+                setSubSectionActive(sectionAccessibility, [sectionProfile, sectionLogin, sectionPurchaseHistory],
                     toggleSectionAccessibilityButton, [toggleSectionProfileButton, toggleSectionLoginButton, toggleSectionPurchaseHistoryFromSettingsButton], 'accessibility', updateUrl);
             } else if (sub === 'purchaseHistory') {
-                setSubSectionActive(sectionPurchaseHistory, [sectionProfile, sectionLogin, sectionAccessibility], 
+                setSubSectionActive(sectionPurchaseHistory, [sectionProfile, sectionLogin, sectionAccessibility],
                     toggleSectionPurchaseHistoryFromSettingsButton, [toggleSectionProfileButton, toggleSectionLoginButton, toggleSectionAccessibilityButton], 'purchaseHistory', updateUrl);
             }
         } else if (section === 'help') {
             setSectionActive(sectionHelp, [sectionHome, sectionExplore, sectionSettings], 'help', false);
-            
+
             const sub = subsection || 'privacy';
             if (sub === 'privacy') {
-                setSubSectionActive(sectionPrivacy, [sectionTerms, sectionCookies, sectionSuggestions], 
+                setSubSectionActive(sectionPrivacy, [sectionTerms, sectionCookies, sectionSuggestions],
                     toggleSectionPrivacyButton, [toggleSectionTermsButton, toggleSectionCookiesButton, toggleSectionSuggestionsButton], 'privacy', updateUrl);
             } else if (sub === 'terms') {
-                setSubSectionActive(sectionTerms, [sectionPrivacy, sectionCookies, sectionSuggestions], 
+                setSubSectionActive(sectionTerms, [sectionPrivacy, sectionCookies, sectionSuggestions],
                     toggleSectionTermsButton, [toggleSectionPrivacyButton, toggleSectionCookiesButton, toggleSectionSuggestionsButton], 'terms', updateUrl);
             } else if (sub === 'cookies') {
-                setSubSectionActive(sectionCookies, [sectionPrivacy, sectionTerms, sectionSuggestions], 
+                setSubSectionActive(sectionCookies, [sectionPrivacy, sectionTerms, sectionSuggestions],
                     toggleSectionCookiesButton, [toggleSectionPrivacyButton, toggleSectionTermsButton, toggleSectionSuggestionsButton], 'cookies', updateUrl);
             } else if (sub === 'suggestions') {
-                setSubSectionActive(sectionSuggestions, [sectionPrivacy, sectionTerms, sectionCookies], 
+                setSubSectionActive(sectionSuggestions, [sectionPrivacy, sectionTerms, sectionCookies],
                     toggleSectionSuggestionsButton, [toggleSectionPrivacyButton, toggleSectionTermsButton, toggleSectionCookiesButton], 'suggestions', updateUrl);
             }
         }
-        
+
         if (window.innerWidth <= 468) {
             closeMenuSurface();
             closeMenuOptions();
         }
-        
+
         updateLogState();
     };
 
@@ -424,32 +440,49 @@ function initMainController() {
                 menuContentOptions.removeAttribute('style');
             }
         }
+
+        if (activeSelector) {
+            const menuContent = activeSelector.querySelector('.menu-content');
+            if (menuContent) {
+                if (window.innerWidth <= 468) {
+                    if (!menuContent.classList.contains('active')) {
+                        menuContent.classList.add('active');
+                    }
+                } else {
+                    menuContent.classList.remove('active');
+                    menuContent.removeAttribute('style');
+                }
+            }
+        }
     };
 
-    // --- Event Listeners Setup ---
     function setupEventListeners() {
         toggleOptionsButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            closeAllSelectors();
-            isModuleOptionsActive ? closeMenuOptions() : openMenuOptions();
-            updateLogState();
+            if (isModuleOptionsActive) {
+                closeMenuOptions();
+            } else {
+                openMenuOptions();
+            }
         });
 
         toggleSurfaceButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            closeAllSelectors();
-            isModuleSurfaceActive ? closeMenuSurface() : openMenuSurface();
-            updateLogState();
+            if (isModuleSurfaceActive) {
+                closeMenuSurface();
+            } else {
+                openMenuSurface();
+            }
         });
 
-        // --- Custom Selectors (REWRITTEN LOGIC) ---
         customSelectorButtons.forEach(button => {
             const parentControlGroup = button.closest('.profile-control-group');
             if (!parentControlGroup) return;
-            
+
             const selectorDropdown = parentControlGroup.querySelector('[data-module="moduleSelector"]');
             if (!selectorDropdown) return;
-            
+
+            const menuContent = selectorDropdown.querySelector('.menu-content');
             const menuLinks = selectorDropdown.querySelectorAll('.menu-link');
             const selectedValueSpan = button.querySelector('.selected-value');
 
@@ -457,53 +490,60 @@ function initMainController() {
                 e.stopPropagation();
                 const isAlreadyActive = selectorDropdown.classList.contains('active');
 
-                // Close any previously active selector
+                // If another selector is open, close it WITHOUT logging
                 if (activeSelector && activeSelector !== selectorDropdown) {
-                    activeSelector.classList.add('disabled');
-                    activeSelector.classList.remove('active');
-                    if (activeSelectorButton) {
-                        activeSelectorButton.classList.remove('active');
-                    }
+                    closeAllSelectors();
                 }
 
-                // Toggle the current one
-                selectorDropdown.classList.toggle('disabled');
-                selectorDropdown.classList.toggle('active');
-                button.classList.toggle('active');
-                
-                // Update the global state
+                // If another module is open, close it and log the change
+                closeMenuOptions();
+
                 if (isAlreadyActive) {
-                    activeSelector = null;
-                    activeSelectorButton = null;
+                    if (closeAllSelectors()) updateLogState();
                 } else {
+                    // Open the new selector
+                    selectorDropdown.classList.remove('disabled');
+                    selectorDropdown.classList.add('active');
+                    button.classList.add('active');
                     activeSelector = selectorDropdown;
                     activeSelectorButton = button;
+
+                    if (window.innerWidth <= 468) {
+                        isAnimating = true;
+                        selectorDropdown.classList.remove('fade-out');
+                        selectorDropdown.classList.add('fade-in');
+                        requestAnimationFrame(() => {
+                            if (menuContent) menuContent.classList.add('active');
+                        });
+                        selectorDropdown.addEventListener('animationend', (e) => {
+                            if (e.animationName === 'fadeIn') {
+                                selectorDropdown.classList.remove('fade-in');
+                                isAnimating = false;
+                            }
+                        }, { once: true });
+                    }
+                    updateLogState(); // Log state on open
                 }
-                updateLogState();
             });
 
             menuLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     const newText = link.querySelector('.menu-link-text span').textContent;
                     if (selectedValueSpan) {
-                         selectedValueSpan.textContent = newText;
+                        selectedValueSpan.textContent = newText;
                     }
-                   
-                    // Update active link state within the dropdown
+
                     const allLinks = selectorDropdown.querySelectorAll('.menu-link');
                     allLinks.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
-                    
-                    // Close the dropdown
-                    if(closeAllSelectors()) {
+
+                    if (closeAllSelectors()) {
                         updateLogState();
                     }
                 });
             });
         });
 
-
-        // --- Profile Edit/View State Toggle ---
         document.querySelectorAll('[data-action="toggleEditState"]').forEach(button => {
             button.addEventListener('click', (e) => {
                 const parent = e.target.closest('.profile-card-item');
@@ -520,43 +560,34 @@ function initMainController() {
             });
         });
 
-
-        // Main navigation
         if (toggleSectionHomeButton) {
             toggleSectionHomeButton.addEventListener('click', () => {
                 if (!isSectionHomeActive) handleNavigationChange('home');
             });
         }
-
         if (toggleSectionExploreButton) {
             toggleSectionExploreButton.addEventListener('click', () => {
                 if (!isSectionExploreActive) handleNavigationChange('explore');
             });
         }
-
-        // Navigation from options menu
         if (toggleSectionSettingsButton) {
             toggleSectionSettingsButton.addEventListener('click', () => {
                 handleNavigationChange('settings', 'profile');
                 closeMenuOptions();
             });
         }
-
         if (toggleSectionHelpButton) {
             toggleSectionHelpButton.addEventListener('click', () => {
                 handleNavigationChange('help', 'privacy');
                 closeMenuOptions();
             });
         }
-
         if (toggleSectionPurchaseHistoryButton) {
             toggleSectionPurchaseHistoryButton.addEventListener('click', () => {
                 handleNavigationChange('settings', 'purchaseHistory');
                 closeMenuOptions();
             });
         }
-
-        // Navigation from settings surface
         if (toggleSectionHomeFromSettingsButton) {
             toggleSectionHomeFromSettingsButton.addEventListener('click', () => handleNavigationChange('home'));
         }
@@ -580,8 +611,6 @@ function initMainController() {
                 if (!isSectionPurchaseHistoryActive) handleNavigationChange('settings', 'purchaseHistory');
             });
         }
-
-        // Navigation from help surface
         if (toggleSectionHomeFromHelpButton) {
             toggleSectionHomeFromHelpButton.addEventListener('click', () => handleNavigationChange('home'));
         }
@@ -606,54 +635,38 @@ function initMainController() {
             });
         }
 
-        // Click outside to close menus
         if (closeOnClickOutside) {
             document.addEventListener('click', (e) => {
                 if (isAnimating) return;
-                let stateChanged = false;
 
-                if (isModuleOptionsActive) {
-                    if (window.innerWidth <= 468) {
-                        if (e.target === moduleOptions) {
-                            stateChanged = closeMenuOptions() || stateChanged;
+                if (isModuleOptionsActive && !moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
+                    closeMenuOptions();
+                }
+                
+                if (activeSelector) {
+                     if (window.innerWidth <= 468) {
+                        if (e.target === activeSelector) {
+                            if(closeAllSelectors()) updateLogState();
                         }
                     } else {
-                        if (!moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
-                            stateChanged = closeMenuOptions() || stateChanged;
+                        if (!activeSelector.contains(e.target) && activeSelectorButton && !activeSelectorButton.contains(e.target)) {
+                            if(closeAllSelectors()) updateLogState();
                         }
                     }
                 }
-
+                
                 if (isModuleSurfaceActive && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
-                    stateChanged = closeMenuSurface() || stateChanged;
-                }
-
-                // Check for click outside of active selector and its button
-                if (activeSelector && !activeSelector.contains(e.target) && activeSelectorButton && !activeSelectorButton.contains(e.target)) {
-                    stateChanged = closeAllSelectors() || stateChanged;
-                }
-
-                if (stateChanged) {
-                    updateLogState();
+                    closeMenuSurface();
                 }
             });
         }
 
-        // Close with Escape key
         if (closeOnEscape) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    let optionsClosed = closeMenuOptions();
-                    let surfaceClosed = closeMenuSurface();
-                    let selectorClosed = false;
-                    // Only close selectors if they are active
-                    if (activeSelector) {
-                        selectorClosed = closeAllSelectors();
-                    }
-                    
-                    if (optionsClosed || surfaceClosed || selectorClosed) {
-                        updateLogState();
-                    }
+                    closeMenuOptions();
+                    if (closeAllSelectors()) updateLogState();
+                    closeMenuSurface();
                 }
             });
         }
@@ -661,10 +674,19 @@ function initMainController() {
         window.addEventListener('resize', handleResize);
     }
     
-    // Initialize everything
     setupEventListeners();
-    initDragController(closeMenuOptions, () => isAnimating);
-    updateLogState();
+    
+    const handleDragClose = () => {
+        if (isModuleOptionsActive) {
+            closeMenuOptions();
+        } else if (activeSelector) {
+            if (closeAllSelectors()) updateLogState();
+        }
+    };
+
+    initDragController(handleDragClose, () => isAnimating);
+    
+    updateLogState(); // Initial log
     console.log('ProjectLeviathan initialized with URL routing and dynamic modules support');
 }
 

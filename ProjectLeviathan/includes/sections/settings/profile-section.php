@@ -1,4 +1,4 @@
-<div class="section-content <?php echo $CURRENT_SUBSECTION === 'profile' ? 'active' : 'disabled'; ?>" data-section="sectionProfile">
+<div class="section-content overflow-y <?php echo $CURRENT_SUBSECTION === 'profile' ? 'active' : 'disabled'; ?>" data-section="sectionProfile">
     <div class="settings-container">
         <div class="profile-card">
             <div class="profile-header-container">
@@ -89,6 +89,9 @@
                     </div>
                     <div class="module-content module-selector disabled" data-module="moduleSelector">
                          <div class="menu-content">
+                            <div class="pill-container">
+                                <div class="drag-handle"></div>
+                            </div>
                             <div class="menu-body overflow-y">
                                 <div class="menu-list">
                                     <div class="menu-link active" data-value="es-LA">
@@ -119,6 +122,9 @@
                     </div>
                     <div class="module-content module-selector disabled" data-module="moduleSelector">
                         <div class="menu-content">
+                            <div class="pill-container">
+                                <div class="drag-handle"></div>
+                            </div>
                             <div class="menu-body overflow-y">
                                 <div class="menu-list">
                                     <div class="menu-link active" data-value="personal">
