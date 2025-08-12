@@ -76,20 +76,24 @@
     min-width: 0;
 }
 
-.profile-card-info strong {
+/* INICIO: Cambio para Ellipsis */
+.profile-card-info strong,
+.profile-card-info span {
     font-size: 1rem;
     font-weight: 500;
     color: #333;
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profile-card-info span {
     font-size: 0.9rem;
     color: #666;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-weight: 400; /* Restaurar peso de fuente normal para el span */
 }
+/* FIN: Cambio para Ellipsis */
 
 .profile-card-info.allow-wrap strong,
 .profile-card-info.allow-wrap span {
@@ -98,23 +102,6 @@
     text-overflow: initial;
 }
 
-
-.edit-button {
-    background-color: transparent;
-    border: 1px solid #00000020;
-    border-radius: 8px;
-    color: #333;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-left: 16px;
-}
-
-.edit-button:hover {
-    background-color: #f5f5fa;
-}
 
 /* -- Edit and View State Styles -- */
 .hidden {
@@ -140,7 +127,8 @@
 
 .edit-input {
     flex-grow: 1;
-    padding: 8px 12px;
+    height: 40px; 
+    padding: 0 12px;
     border: 1px solid #00000020;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -156,16 +144,37 @@
     gap: 8px;
 }
 
-.cancel-button {
-    background-color: transparent;
+.edit-button,
+.cancel-button,
+.save-button {
+    width: 80px;
+    height: 40px;
+    padding: 0 16px;
     border: 1px solid #00000020;
     border-radius: 8px;
-    color: #333;
     font-size: 0.9rem;
     font-weight: 500;
-    padding: 10px 18px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.edit-button {
+    margin-left: 16px;
+    background-color: transparent;
+    color: #333;
+}
+
+.edit-button:hover {
+    background-color: #f5f5fa;
+}
+
+.cancel-button {
+    background-color: transparent;
+    color: #333;
 }
 
 .cancel-button:hover {
@@ -174,14 +183,8 @@
 
 .save-button {
     background-color: #000;
-    border: 1px solid #000;
-    border-radius: 8px;
+    border-color: #000;
     color: #fff;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 10px 18px;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
 }
 
 .save-button:hover {
@@ -194,7 +197,6 @@
     max-width: 285px;
     margin-top: 8px;
     position: relative;
-    /* Crucial for positioning the dropdown */
 }
 
 .selector-input {
@@ -209,6 +211,11 @@
     background-color: #fff;
     cursor: pointer;
     user-select: none;
+    transition: border-color 0.2s ease;
+}
+
+.selector-input:hover {
+    border-color: #000000;
 }
 
 .selector-input.active {
@@ -252,7 +259,6 @@
     background-color: #e7f3ff;
     color: #004085;
     padding: 15px;
-    /* margin-top is removed as its parent .profile-control-group provides it */
     border-radius: 8px;
     font-size: 0.9rem;
     line-height: 1.5;
@@ -326,6 +332,22 @@ input:checked~.material-symbols-rounded {
 
 
 @media (max-width: 468px) {
+    /* INICIO: Cambios para el layout del avatar */
+    .profile-card:nth-child(2) .profile-card-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-card:nth-child(2) .profile-avatar-container {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
+
+    .profile-card:nth-child(2) .profile-card-info {
+        text-align: center;
+    }
+    /* FIN: Cambios para el layout del avatar */
+    
     .edit-input-group {
         flex-direction: column;
         align-items: stretch;

@@ -13,10 +13,6 @@ function initMainController() {
     const initialState = getCurrentUrlState();
     
     // --- State Variables (initialized from current URL) ---
-    let isModuleOptionsActive = false;
-    let isModuleSurfaceActive = false;
-    let activeSelector = null; // Holds the currently active selector DROPDOWN element
-    let activeSelectorButton = null; // Holds the button that triggered the active selector
     let isSectionHomeActive = initialState ? initialState.section === 'home' : true;
     let isSectionExploreActive = initialState ? initialState.section === 'explore' : false;
     let isSectionSettingsActive = initialState ? initialState.section === 'settings' : false;
@@ -98,9 +94,6 @@ function initMainController() {
     const updateLogState = () => {
         const toState = (active) => active ? '✅ Activo' : '❌ Inactivo';
         const tableData = {
-            '── Modules ──': { section: 'Module Options', status: toState(isModuleOptionsActive) },
-            ' ': { section: 'Module Surface', status: toState(isModuleSurfaceActive) },
-            '  ': { section: 'Active Selector', status: toState(activeSelector) },
             '── Sections ──': { section: 'Home', status: toState(isSectionHomeActive) },
             '   ': { section: 'Explore', status: toState(isSectionExploreActive) },
             '    ': { section: 'Settings', status: toState(isSectionSettingsActive) },
@@ -120,7 +113,6 @@ function initMainController() {
     };
 
     const setMenuOptionsClosed = () => {
-        isModuleOptionsActive = false;
         moduleOptions.classList.add('disabled');
         moduleOptions.classList.remove('active', 'fade-out');
         menuContentOptions.classList.add('disabled');
@@ -128,14 +120,13 @@ function initMainController() {
     };
 
     const setMenuOptionsOpen = () => {
-        isModuleOptionsActive = true;
         moduleOptions.classList.remove('disabled');
         moduleOptions.classList.add('active');
         menuContentOptions.classList.remove('disabled');
     };
 
     const closeMenuOptions = () => {
-        if (isAnimating || !isModuleOptionsActive) return false;
+        if (isAnimating || !moduleOptions.classList.contains('active')) return false;
 
         if (window.innerWidth <= 468 && menuContentOptions) {
             isAnimating = true;
@@ -159,7 +150,7 @@ function initMainController() {
     };
 
     const openMenuOptions = () => {
-        if (isAnimating || isModuleOptionsActive) return false;
+        if (isAnimating || moduleOptions.classList.contains('active')) return false;
 
         if (!allowMultipleActiveModules) {
             if (closeAllSelectors()) updateLogState();
@@ -191,7 +182,6 @@ function initMainController() {
     };
 
     const setMenuSurfaceClosed = () => {
-        isModuleSurfaceActive = false;
         moduleSurface.classList.add('disabled');
         moduleSurface.classList.remove('active');
     };
@@ -201,51 +191,47 @@ function initMainController() {
             if (closeAllSelectors()) updateLogState();
             if (closeMenuOptions()) updateLogState();
         }
-        isModuleSurfaceActive = true;
         moduleSurface.classList.remove('disabled');
         moduleSurface.classList.add('active');
     };
 
     const closeMenuSurface = () => {
-        if (!isModuleSurfaceActive) return false;
+        if (!moduleSurface.classList.contains('active')) return false;
         setMenuSurfaceClosed();
         updateLogState();
         return true;
     };
 
     const openMenuSurface = () => {
-        if (isModuleSurfaceActive) return false;
+        if (moduleSurface.classList.contains('active')) return false;
         setMenuSurfaceOpen();
         updateLogState();
         return true;
     };
 
     const closeAllSelectors = () => {
+        const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
         if (isAnimating || !activeSelector) return false;
+        const activeSelectorButton = document.querySelector('[data-action="toggleSelector"].active');
 
-        const selectorToClose = activeSelector;
-        const buttonToDeactivate = activeSelectorButton;
-        const menuContent = selectorToClose.querySelector('.menu-content');
-        
-        activeSelector = null;
-        activeSelectorButton = null;
+        const menuContent = activeSelector.querySelector('.menu-content');
 
         const finalCleanup = () => {
-            selectorToClose.classList.add('disabled');
-            selectorToClose.classList.remove('active', 'fade-out');
-            if (buttonToDeactivate) {
-                buttonToDeactivate.classList.remove('active');
+            activeSelector.classList.add('disabled');
+            activeSelector.classList.remove('active', 'fade-out');
+            if (activeSelectorButton) {
+                activeSelectorButton.classList.remove('active');
             }
         };
 
         if (window.innerWidth <= 468 && menuContent) {
             isAnimating = true;
             menuContent.removeAttribute('style');
-            selectorToClose.classList.remove('fade-in');
-            selectorToClose.classList.add('fade-out');
+            activeSelector.classList.remove('fade-in');
+            activeSelector.classList.add('fade-out');
             menuContent.classList.remove('active');
 
-            selectorToClose.addEventListener('animationend', (e) => {
+            activeSelector.addEventListener('animationend', (e) => {
                 if (e.animationName === 'fadeOut') {
                     finalCleanup();
                     isAnimating = false;
@@ -430,7 +416,7 @@ function initMainController() {
     };
 
     const handleResize = () => {
-        if (isModuleOptionsActive) {
+        if (moduleOptions.classList.contains('active')) {
             if (window.innerWidth <= 468) {
                 if (!menuContentOptions.classList.contains('active')) {
                     menuContentOptions.classList.add('active');
@@ -440,7 +426,7 @@ function initMainController() {
                 menuContentOptions.removeAttribute('style');
             }
         }
-
+        const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
         if (activeSelector) {
             const menuContent = activeSelector.querySelector('.menu-content');
             if (menuContent) {
@@ -459,7 +445,7 @@ function initMainController() {
     function setupEventListeners() {
         toggleOptionsButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (isModuleOptionsActive) {
+            if (moduleOptions.classList.contains('active')) {
                 closeMenuOptions();
             } else {
                 openMenuOptions();
@@ -468,7 +454,7 @@ function initMainController() {
 
         toggleSurfaceButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (isModuleSurfaceActive) {
+            if (moduleSurface.classList.contains('active')) {
                 closeMenuSurface();
             } else {
                 openMenuSurface();
@@ -490,23 +476,18 @@ function initMainController() {
                 e.stopPropagation();
                 const isAlreadyActive = selectorDropdown.classList.contains('active');
 
-                // If another selector is open, close it WITHOUT logging
-                if (activeSelector && activeSelector !== selectorDropdown) {
+                if (document.querySelector('[data-module="moduleSelector"].active') && !isAlreadyActive) {
                     closeAllSelectors();
                 }
 
-                // If another module is open, close it and log the change
                 closeMenuOptions();
 
                 if (isAlreadyActive) {
                     if (closeAllSelectors()) updateLogState();
                 } else {
-                    // Open the new selector
                     selectorDropdown.classList.remove('disabled');
                     selectorDropdown.classList.add('active');
                     button.classList.add('active');
-                    activeSelector = selectorDropdown;
-                    activeSelectorButton = button;
 
                     if (window.innerWidth <= 468) {
                         isAnimating = true;
@@ -522,7 +503,7 @@ function initMainController() {
                             }
                         }, { once: true });
                     }
-                    updateLogState(); // Log state on open
+                    updateLogState(); 
                 }
             });
 
@@ -638,8 +619,8 @@ function initMainController() {
         if (closeOnClickOutside) {
             document.addEventListener('click', (e) => {
                 if (isAnimating) return;
-
-                if (isModuleOptionsActive && !moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
+                const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
+                if (moduleOptions.classList.contains('active') && !moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
                     closeMenuOptions();
                 }
                 
@@ -649,13 +630,14 @@ function initMainController() {
                             if(closeAllSelectors()) updateLogState();
                         }
                     } else {
+                        const activeSelectorButton = document.querySelector('[data-action="toggleSelector"].active');
                         if (!activeSelector.contains(e.target) && activeSelectorButton && !activeSelectorButton.contains(e.target)) {
                             if(closeAllSelectors()) updateLogState();
                         }
                     }
                 }
                 
-                if (isModuleSurfaceActive && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
+                if (moduleSurface.classList.contains('active') && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
                     closeMenuSurface();
                 }
             });
@@ -677,9 +659,9 @@ function initMainController() {
     setupEventListeners();
     
     const handleDragClose = () => {
-        if (isModuleOptionsActive) {
+        if (moduleOptions.classList.contains('active')) {
             closeMenuOptions();
-        } else if (activeSelector) {
+        } else if (document.querySelector('[data-module="moduleSelector"].active')) {
             if (closeAllSelectors()) updateLogState();
         }
     };

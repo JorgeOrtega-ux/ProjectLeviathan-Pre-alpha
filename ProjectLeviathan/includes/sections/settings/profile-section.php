@@ -87,7 +87,7 @@
                         <span class="selected-value">Español (Latinoamérica)</span>
                         <span class="material-symbols-rounded">arrow_drop_down</span>
                     </div>
-                    <div class="module-content module-selector disabled" data-module="moduleSelector">
+                    <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                          <div class="menu-content">
                             <div class="pill-container">
                                 <div class="drag-handle"></div>
@@ -120,7 +120,7 @@
                         <span class="selected-value">Uso personal</span>
                         <span class="material-symbols-rounded">arrow_drop_down</span>
                     </div>
-                    <div class="module-content module-selector disabled" data-module="moduleSelector">
+                    <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                         <div class="menu-content">
                             <div class="pill-container">
                                 <div class="drag-handle"></div>
