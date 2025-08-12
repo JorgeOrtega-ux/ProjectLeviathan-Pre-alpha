@@ -194,8 +194,6 @@ function initMainController() {
         moduleSurface.classList.remove('disabled');
         moduleSurface.classList.add('active');
 
-        // --- START: CORRECTED CODE ---
-        // Ensure the correct inner menu is displayed based on the current section state
         if (isSectionSettingsActive) {
             surfaceMain.classList.add('disabled');
             surfaceMain.classList.remove('active');
@@ -218,7 +216,6 @@ function initMainController() {
             surfaceMain.classList.remove('disabled');
             surfaceMain.classList.add('active');
         }
-        // --- END: CORRECTED CODE ---
     };
 
     const closeMenuSurface = () => {
@@ -566,6 +563,23 @@ function initMainController() {
                 parent.querySelector('.view-state').classList.remove('hidden');
             });
         });
+        
+        // --- INICIO: CÓDIGO CORREGIDO PARA SCROLL ---
+        const generalContentTop = document.querySelector('.general-content-top');
+        const scrollableSections = document.querySelectorAll('.section-content.overflow-y');
+
+        scrollableSections.forEach(section => {
+            section.addEventListener('scroll', () => {
+                if (generalContentTop) {
+                    if (section.scrollTop > 0) {
+                        generalContentTop.classList.add('shadow');
+                    } else {
+                        generalContentTop.classList.remove('shadow');
+                    }
+                }
+            });
+        });
+        // --- FIN: CÓDIGO CORREGIDO PARA SCROLL ---
 
         if (toggleSectionHomeButton) {
             toggleSectionHomeButton.addEventListener('click', () => {
@@ -647,21 +661,17 @@ function initMainController() {
                 if (isAnimating) return;
                 const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
 
-                // --- INICIO: CÓDIGO CORREGIDO ---
                 if (moduleOptions.classList.contains('active') && !toggleOptionsButton.contains(e.target)) {
                     if (window.innerWidth <= 468) {
-                        // En móvil, cierra si se hace clic en la superposición (el propio módulo)
                         if (e.target === moduleOptions) {
                             closeMenuOptions();
                         }
                     } else {
-                        // En escritorio, cierra si se hace clic fuera del módulo
                         if (!moduleOptions.contains(e.target)) {
                             closeMenuOptions();
                         }
                     }
                 }
-                // --- FIN: CÓDIGO CORREGIDO ---
                 
                 if (activeSelector) {
                      if (window.innerWidth <= 468) {
