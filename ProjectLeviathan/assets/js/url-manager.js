@@ -1,4 +1,3 @@
-// --- URL Manager Module ---
 let urlManagerConfig = null;
 let urlMap = null;
 
@@ -73,7 +72,6 @@ function navigateToUrl(section, subsection = null, updateHistory = true) {
     
     const url = generateUrl(section, subsection);
     
-    // Comprobar si la nueva URL es diferente a la actual antes de modificar el historial
     if (updateHistory && window.location.href !== url) {
         history.pushState({
             section: section,

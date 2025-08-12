@@ -7,7 +7,6 @@ function initMainController() {
     const allowMultipleActiveModules = false;
     let isAnimating = false;
     
-    // Objeto para gestionar las instancias de Popper.js
     const popperInstances = {};
 
     initUrlManager();
@@ -231,7 +230,6 @@ function initMainController() {
             selector.classList.add('disabled');
             selector.classList.remove('active');
             
-            // Destruir instancia de Popper.js
             const popperId = selector.id;
             if (popperInstances[popperId]) {
                 popperInstances[popperId].destroy();
@@ -453,7 +451,6 @@ function initMainController() {
             const selectorDropdown = parentControlGroup.querySelector('[data-module="moduleSelector"]');
             if (!selectorDropdown) return;
 
-            // Asignar un ID único para Popper.js
             const popperId = `selector-${index}`;
             selectorDropdown.id = popperId;
             button.setAttribute('aria-controls', popperId);
@@ -478,7 +475,6 @@ function initMainController() {
                     selectorDropdown.classList.add('active');
                     button.classList.add('active');
                     
-                    // Crear instancia de Popper.js
                     popperInstances[popperId] = Popper.createPopper(button, selectorDropdown, {
                         placement: 'bottom-start',
                         modifiers: [
@@ -625,25 +621,19 @@ function initMainController() {
             document.addEventListener('click', (e) => {
                 if (isAnimating) return;
                 
-                // --- INICIO DE LA LÓGICA CORREGIDA ---
-                
                 const moduleOptionsIsOpen = moduleOptions.classList.contains('active');
                 const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
 
-                // Lógica para cerrar Menú de Opciones
                 if (moduleOptionsIsOpen) {
-                    // En móvil, se cierra si el clic es en el overlay (el propio módulo)
                     if (window.innerWidth <= 468) {
                         if (e.target === moduleOptions) {
                             closeMenuOptions();
                         }
-                    // En desktop, se cierra si el clic es fuera del módulo y fuera del botón
                     } else if (!moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
                         closeMenuOptions();
                     }
                 }
                 
-                // Lógica para cerrar Selectores
                 if (activeSelector) {
                     const selectorButton = document.querySelector(`[aria-controls="${activeSelector.id}"]`);
                     if (selectorButton && !selectorButton.contains(e.target) && !activeSelector.contains(e.target)) {
@@ -651,9 +641,6 @@ function initMainController() {
                     }
                 }
                 
-                // --- FIN DE LA LÓGICA CORREGIDA ---
-                
-                // Lógica para cerrar Menú Lateral (Surface)
                 if (moduleSurface.classList.contains('active') && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
                     closeMenuSurface();
                 }
