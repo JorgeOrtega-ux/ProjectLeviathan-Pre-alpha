@@ -395,30 +395,3 @@ input:checked~.material-symbols-rounded {
         align-self: flex-end;
     }
 }
-
-@media (max-width: 468px) {
-    .module-content.module-selector.active {
-        align-items: flex-end;
-        background-color: #00000080;
-        height: 100%;
-        justify-content: center;
-        left: 0;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 999;
-    }
-
-    .module-selector.active .menu-content {
-        border-bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        max-height: 80%;
-        transform: translateY(100%);
-        transition: transform 0.3s ease-out;
-    }
-    
-    .module-selector.active .menu-content.active {
-        transform: translateY(0);
-    }
-}

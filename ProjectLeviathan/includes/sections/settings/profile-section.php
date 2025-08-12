@@ -89,9 +89,6 @@
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                          <div class="menu-content">
-                            <div class="pill-container">
-                                <div class="drag-handle"></div>
-                            </div>
                             <div class="menu-body overflow-y">
                                 <div class="menu-list">
                                     <div class="menu-link active" data-value="es-LA">
@@ -122,9 +119,6 @@
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                         <div class="menu-content">
-                            <div class="pill-container">
-                                <div class="drag-handle"></div>
-                            </div>
                             <div class="menu-body overflow-y">
                                 <div class="menu-list">
                                     <div class="menu-link active" data-value="personal">

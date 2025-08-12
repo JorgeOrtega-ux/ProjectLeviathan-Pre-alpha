@@ -248,8 +248,8 @@ body {
 }
 
 .menu-link.active {
-    background-color: #000000;
-    color: #fff;
+    background-color: #f5f5fa;
+    color: #000000;
 }
 
 .module-content.module-surface .menu-list {
@@ -468,7 +468,7 @@ body {
         transform: translateY(0);
     }
 
-    .menu-body {
+    .module-options .menu-body {
         padding-top: 0;
     }
 

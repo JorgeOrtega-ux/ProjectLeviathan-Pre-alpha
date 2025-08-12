@@ -42,6 +42,9 @@
             </div>
         </div>
     </div>
+    
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    
     <script type="module" src="<?php echo $BASE_URL; ?>/assets/js/app-init.js"></script>
 </body>
 

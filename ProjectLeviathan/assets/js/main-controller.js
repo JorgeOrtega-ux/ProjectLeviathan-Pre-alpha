@@ -6,6 +6,9 @@ function initMainController() {
     const closeOnEscape = true;
     const allowMultipleActiveModules = false;
     let isAnimating = false;
+    
+    // Objeto para gestionar las instancias de Popper.js
+    const popperInstances = {};
 
     initUrlManager();
     const initialState = getCurrentUrlState();
@@ -219,37 +222,24 @@ function initMainController() {
     };
 
     const closeAllSelectors = () => {
-        const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
-        if (isAnimating || !activeSelector) return false;
-        const activeSelectorButton = document.querySelector('[data-action="toggleSelector"].active');
-
-        const menuContent = activeSelector.querySelector('.menu-content');
-
-        const finalCleanup = () => {
-            activeSelector.classList.add('disabled');
-            activeSelector.classList.remove('active', 'fade-out');
-            if (activeSelectorButton) {
-                activeSelectorButton.classList.remove('active');
+        let closed = false;
+        document.querySelectorAll('[data-module="moduleSelector"].active').forEach(selector => {
+            const button = document.querySelector(`[aria-controls="${selector.id}"]`);
+            if (button) {
+                button.classList.remove('active');
             }
-        };
-
-        if (window.innerWidth <= 468 && menuContent) {
-            isAnimating = true;
-            menuContent.removeAttribute('style');
-            activeSelector.classList.remove('fade-in');
-            activeSelector.classList.add('fade-out');
-            menuContent.classList.remove('active');
-
-            activeSelector.addEventListener('animationend', (e) => {
-                if (e.animationName === 'fadeOut') {
-                    finalCleanup();
-                    isAnimating = false;
-                }
-            }, { once: true });
-        } else {
-            finalCleanup();
-        }
-        return true;
+            selector.classList.add('disabled');
+            selector.classList.remove('active');
+            
+            // Destruir instancia de Popper.js
+            const popperId = selector.id;
+            if (popperInstances[popperId]) {
+                popperInstances[popperId].destroy();
+                delete popperInstances[popperId];
+            }
+            closed = true;
+        });
+        return closed;
     };
 
     const updateMainMenuButtons = (activeButton) => {
@@ -435,20 +425,6 @@ function initMainController() {
                 menuContentOptions.removeAttribute('style');
             }
         }
-        const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
-        if (activeSelector) {
-            const menuContent = activeSelector.querySelector('.menu-content');
-            if (menuContent) {
-                if (window.innerWidth <= 468) {
-                    if (!menuContent.classList.contains('active')) {
-                        menuContent.classList.add('active');
-                    }
-                } else {
-                    menuContent.classList.remove('active');
-                    menuContent.removeAttribute('style');
-                }
-            }
-        }
     };
 
     function setupEventListeners() {
@@ -470,14 +446,18 @@ function initMainController() {
             }
         });
 
-        customSelectorButtons.forEach(button => {
+        customSelectorButtons.forEach((button, index) => {
             const parentControlGroup = button.closest('.profile-control-group');
             if (!parentControlGroup) return;
 
             const selectorDropdown = parentControlGroup.querySelector('[data-module="moduleSelector"]');
             if (!selectorDropdown) return;
 
-            const menuContent = selectorDropdown.querySelector('.menu-content');
+            // Asignar un ID único para Popper.js
+            const popperId = `selector-${index}`;
+            selectorDropdown.id = popperId;
+            button.setAttribute('aria-controls', popperId);
+
             const menuLinks = selectorDropdown.querySelectorAll('.menu-link');
             const selectedValueSpan = button.querySelector('.selected-value');
 
@@ -485,10 +465,9 @@ function initMainController() {
                 e.stopPropagation();
                 const isAlreadyActive = selectorDropdown.classList.contains('active');
 
-                if (document.querySelector('[data-module="moduleSelector"].active') && !isAlreadyActive) {
-                    closeAllSelectors();
+                if (!allowMultipleActiveModules) {
+                    if (closeAllSelectors()) updateLogState();
                 }
-
                 closeMenuOptions();
 
                 if (isAlreadyActive) {
@@ -497,22 +476,21 @@ function initMainController() {
                     selectorDropdown.classList.remove('disabled');
                     selectorDropdown.classList.add('active');
                     button.classList.add('active');
+                    
+                    // Crear instancia de Popper.js
+                    popperInstances[popperId] = Popper.createPopper(button, selectorDropdown, {
+                        placement: 'bottom-start',
+                        modifiers: [
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 8],
+                                },
+                            },
+                        ],
+                    });
 
-                    if (window.innerWidth <= 468) {
-                        isAnimating = true;
-                        selectorDropdown.classList.remove('fade-out');
-                        selectorDropdown.classList.add('fade-in');
-                        requestAnimationFrame(() => {
-                            if (menuContent) menuContent.classList.add('active');
-                        });
-                        selectorDropdown.addEventListener('animationend', (e) => {
-                            if (e.animationName === 'fadeIn') {
-                                selectorDropdown.classList.remove('fade-in');
-                                isAnimating = false;
-                            }
-                        }, { once: true });
-                    }
-                    updateLogState(); 
+                    updateLogState();
                 }
             });
 
@@ -523,13 +501,10 @@ function initMainController() {
                         selectedValueSpan.textContent = newText;
                     }
 
-                    const allLinks = selectorDropdown.querySelectorAll('.menu-link');
-                    allLinks.forEach(l => l.classList.remove('active'));
+                    selectorDropdown.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
 
-                    if (closeAllSelectors()) {
-                        updateLogState();
-                    }
+                    if (closeAllSelectors()) updateLogState();
                 });
             });
         });
@@ -643,33 +618,36 @@ function initMainController() {
         if (closeOnClickOutside) {
             document.addEventListener('click', (e) => {
                 if (isAnimating) return;
+                
+                // --- INICIO DE LA LÓGICA CORREGIDA ---
+                
+                const moduleOptionsIsOpen = moduleOptions.classList.contains('active');
                 const activeSelector = document.querySelector('[data-module="moduleSelector"].active');
 
-                if (moduleOptions.classList.contains('active') && !toggleOptionsButton.contains(e.target)) {
+                // Lógica para cerrar Menú de Opciones
+                if (moduleOptionsIsOpen) {
+                    // En móvil, se cierra si el clic es en el overlay (el propio módulo)
                     if (window.innerWidth <= 468) {
                         if (e.target === moduleOptions) {
                             closeMenuOptions();
                         }
-                    } else {
-                        if (!moduleOptions.contains(e.target)) {
-                            closeMenuOptions();
-                        }
+                    // En desktop, se cierra si el clic es fuera del módulo y fuera del botón
+                    } else if (!moduleOptions.contains(e.target) && !toggleOptionsButton.contains(e.target)) {
+                        closeMenuOptions();
                     }
                 }
                 
+                // Lógica para cerrar Selectores
                 if (activeSelector) {
-                     if (window.innerWidth <= 468) {
-                        if (e.target === activeSelector) {
-                            if(closeAllSelectors()) updateLogState();
-                        }
-                    } else {
-                        const activeSelectorButton = document.querySelector('[data-action="toggleSelector"].active');
-                        if (!activeSelector.contains(e.target) && activeSelectorButton && !activeSelectorButton.contains(e.target)) {
-                            if(closeAllSelectors()) updateLogState();
-                        }
+                    const selectorButton = document.querySelector(`[aria-controls="${activeSelector.id}"]`);
+                    if (selectorButton && !selectorButton.contains(e.target) && !activeSelector.contains(e.target)) {
+                        if(closeAllSelectors()) updateLogState();
                     }
                 }
                 
+                // --- FIN DE LA LÓGICA CORREGIDA ---
+                
+                // Lógica para cerrar Menú Lateral (Surface)
                 if (moduleSurface.classList.contains('active') && !moduleSurface.contains(e.target) && !toggleSurfaceButton.contains(e.target)) {
                     closeMenuSurface();
                 }
@@ -679,8 +657,8 @@ function initMainController() {
         if (closeOnEscape) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    closeMenuOptions();
                     if (closeAllSelectors()) updateLogState();
+                    closeMenuOptions();
                     closeMenuSurface();
                 }
             });
@@ -694,8 +672,6 @@ function initMainController() {
     const handleDragClose = () => {
         if (moduleOptions.classList.contains('active')) {
             closeMenuOptions();
-        } else if (document.querySelector('[data-module="moduleSelector"].active')) {
-            if (closeAllSelectors()) updateLogState();
         }
     };
 

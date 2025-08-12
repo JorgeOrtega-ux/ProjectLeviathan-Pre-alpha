@@ -1,6 +1,6 @@
 function initDragController(closeCallback, isAnimatingCallback) {
     // Selecciona todos los módulos que están diseñados para ser arrastrables
-    const draggableModules = document.querySelectorAll('[data-module="moduleOptions"], [data-module="moduleSelector"]');
+    const draggableModules = document.querySelectorAll('[data-module="moduleOptions"]');
 
     draggableModules.forEach(module => {
         // El menuContent es el hijo directo que realmente se mueve
