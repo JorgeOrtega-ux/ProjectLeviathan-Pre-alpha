@@ -10,7 +10,7 @@
         </div>
 
         <div class="profile-card">
-            <div class="profile-card-item">
+            <div class="profile-card-item avatar-layout">
                 <div class="profile-card-content">
                     <div class="profile-avatar-container">
                         <div class="profile-container rank-owner">
