@@ -101,41 +101,39 @@
             </div>
         </div>
 
-        <div class="purchase-table-wrapper">
-            <table class="purchase-table">
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Emitida a nombre de</th>
-                        <th>Creado el</th>
-                        <th>Estado</th>
-                        <th class="text-right">Total a pagar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td data-label="Descripción">Plan Premium Anual (Renovación)</td>
-                        <td data-label="Emitida a nombre de">Jorge Ortega</td>
-                        <td data-label="Creado el">10 ago 2025</td>
-                        <td data-label="Estado"><span class="status-pill status-paid">Pagado</span></td>
-                        <td data-label="Total a pagar" class="text-right">$1,200.00 MXN</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Descripción">Créditos de Contenido (x50)</td>
-                        <td data-label="Emitida a nombre de">Jorge Ortega</td>
-                        <td data-label="Creado el">15 jul 2025</td>
-                        <td data-label="Estado"><span class="status-pill status-paid">Pagado</span></td>
-                        <td data-label="Total a pagar" class="text-right">$250.00 MXN</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Descripción">Plan Premium Mensual</td>
-                        <td data-label="Emitida a nombre de">Jorge Ortega</td>
-                        <td data-label="Creado el">10 jul 2025</td>
-                        <td data-label="Estado"><span class="status-pill status-refunded">Reembolsado</span></td>
-                        <td data-label="Total a pagar" class="text-right">$120.00 MXN</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table class="purchase-table">
+            <thead class="desktop-only">
+                <tr>
+                    <th>Descripción</th>
+                    <th>Emitida a nombre de</th>
+                    <th>Creado el</th>
+                    <th>Estado</th>
+                    <th class="text-right">Total a pagar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="purchase-item">
+                    <td data-label="Descripción">Plan Premium Anual (Renovación)</td>
+                    <td data-label="Emitida a nombre de">Jorge Ortega</td>
+                    <td data-label="Creado el">10 ago 2025</td>
+                    <td data-label="Estado"><span class="status-pill status-paid">Pagado</span></td>
+                    <td data-label="Total a pagar" class="text-right">$1,200.00 MXN</td>
+                </tr>
+                <tr class="purchase-item">
+                    <td data-label="Descripción">Créditos de Contenido (x50)</td>
+                    <td data-label="Emitida a nombre de">Jorge Ortega</td>
+                    <td data-label="Creado el">15 jul 2025</td>
+                    <td data-label="Estado"><span class="status-pill status-paid">Pagado</span></td>
+                    <td data-label="Total a pagar" class="text-right">$250.00 MXN</td>
+                </tr>
+                <tr class="purchase-item">
+                    <td data-label="Descripción">Plan Premium Mensual</td>
+                    <td data-label="Emitida a nombre de">Jorge Ortega</td>
+                    <td data-label="Creado el">10 jul 2025</td>
+                    <td data-label="Estado"><span class="status-pill status-refunded">Reembolsado</span></td>
+                    <td data-label="Total a pagar" class="text-right">$120.00 MXN</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
