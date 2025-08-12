@@ -144,52 +144,37 @@ body {
     background-color: #f5f5fa;
 }
 
-.rank-owner .profile-content {
+/* --- Colores de fondo del contenido del perfil (Avatar) --- */
+.rank-owner .profile-content, .rank-owner {
     background-color: #7851a9;
 }
 
-.rank-admin .profile-content {
+.rank-admin .profile-content, .rank-admin {
     background-color: #ff0000;
 }
 
-.rank-community-manager .profile-content {
+.rank-community-manager .profile-content, .rank-community-manager {
     background-color: #28a745;
 }
 
-.rank-moderator .profile-content {
+.rank-moderator .profile-content, .rank-moderator {
     background-color: #007bff;
 }
 
-.rank-support-team .profile-content {
-    background-color: #ffc107;
+.rank-elite .profile-content, .rank-elite {
+    background-color: #34495e;
 }
 
-.rank-user .profile-content {
+.rank-premium .profile-content, .rank-premium {
+    background-color: #ffd700;
+}
+
+.rank-vip .profile-content, .rank-vip {
+    background-color: #17a2b8;
+}
+
+.rank-user .profile-content, .rank-user {
     background-color: #6c757d;
-}
-
-.rank-owner {
-    background: #7851a9;
-}
-
-.rank-admin {
-    background: #ff0000;
-}
-
-.rank-community-manager {
-    background: #28a745;
-}
-
-.rank-moderator {
-    background: #007bff;
-}
-
-.rank-support-team {
-    background: #ffc107;
-}
-
-.rank-user {
-    background: #6c757d;
 }
 
 .module-content.module-options {

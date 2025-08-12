@@ -122,12 +122,12 @@ function initMainController() {
                 if (e.animationName === 'fadeOut') {
                     setMenuOptionsClosed();
                     isAnimating = false;
-                    updateLogState();
+                    // updateLogState();
                 }
             }, { once: true });
         } else {
             setMenuOptionsClosed();
-            updateLogState();
+            // updateLogState();
         }
         return true;
     };
@@ -136,8 +136,8 @@ function initMainController() {
         if (isAnimating || moduleOptions.classList.contains('active')) return false;
 
         if (!allowMultipleActiveModules) {
-            if (closeAllSelectors()) updateLogState();
-            if (closeMenuSurface()) updateLogState();
+            if (closeAllSelectors()) /* updateLogState() */;
+            if (closeMenuSurface()) /* updateLogState() */;
         }
         
         setMenuOptionsOpen();
@@ -160,7 +160,7 @@ function initMainController() {
         } else {
             menuContentOptions.classList.add('active');
         }
-        updateLogState();
+        // updateLogState();
         return true;
     };
 
@@ -171,8 +171,8 @@ function initMainController() {
 
     const setMenuSurfaceOpen = () => {
         if (!allowMultipleActiveModules) {
-            if (closeAllSelectors()) updateLogState();
-            if (closeMenuOptions()) updateLogState();
+            if (closeAllSelectors()) /* updateLogState() */;
+            if (closeMenuOptions()) /* updateLogState() */;
         }
         moduleSurface.classList.remove('disabled');
         moduleSurface.classList.add('active');
@@ -204,14 +204,14 @@ function initMainController() {
     const closeMenuSurface = () => {
         if (!moduleSurface.classList.contains('active')) return false;
         setMenuSurfaceClosed();
-        updateLogState();
+        // updateLogState();
         return true;
     };
 
     const openMenuSurface = () => {
         if (moduleSurface.classList.contains('active')) return false;
         setMenuSurfaceOpen();
-        updateLogState();
+        // updateLogState();
         return true;
     };
 
@@ -355,7 +355,7 @@ function initMainController() {
     
     const resetUIComponents = () => {
         if (closeAllSelectors()) {
-            updateLogState();
+            // updateLogState();
         }
 
         document.querySelectorAll('.profile-card-item .edit-state').forEach(editState => {
@@ -474,13 +474,13 @@ function initMainController() {
                 const isAlreadyActive = selectorDropdown.classList.contains('active');
 
                 if (!allowMultipleActiveModules) {
-                    if (closeAllSelectors()) updateLogState();
-                    if (closeMenuSurface()) updateLogState();
+                    if (closeAllSelectors()) /* updateLogState() */;
+                    if (closeMenuSurface()) /* updateLogState() */;
                 }
                 closeMenuOptions();
 
                 if (isAlreadyActive) {
-                    if (closeAllSelectors()) updateLogState();
+                    if (closeAllSelectors()) /* updateLogState() */;
                 } else {
                     selectorDropdown.classList.remove('disabled');
                     selectorDropdown.classList.add('active');
@@ -498,7 +498,7 @@ function initMainController() {
                         ],
                     });
 
-                    updateLogState();
+                    // updateLogState();
                 }
             });
 
@@ -517,7 +517,7 @@ function initMainController() {
                     selectorDropdown.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
 
-                    if (closeAllSelectors()) updateLogState();
+                    if (closeAllSelectors()) /* updateLogState() */;
                 });
             });
         });
@@ -637,7 +637,7 @@ function initMainController() {
                 if (activeSelector) {
                     const selectorButton = document.querySelector(`[aria-controls="${activeSelector.id}"]`);
                     if (selectorButton && !selectorButton.contains(e.target) && !activeSelector.contains(e.target)) {
-                        if(closeAllSelectors()) updateLogState();
+                        if(closeAllSelectors()) /* updateLogState() */;
                     }
                 }
                 
@@ -650,7 +650,7 @@ function initMainController() {
         if (closeOnEscape) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    if (closeAllSelectors()) updateLogState();
+                    if (closeAllSelectors()) /* updateLogState() */;
                     closeMenuOptions();
                     closeMenuSurface();
                 }
