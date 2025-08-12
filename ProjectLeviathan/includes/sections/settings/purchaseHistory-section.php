@@ -22,8 +22,15 @@
                 <label>Filtrar por tipo</label>
                 <div class="profile-control-group">
                     <div class="selector-input" data-action="toggleSelector">
-                        <span class="selected-value">Cualquier tipo de artículo</span>
-                        <span class="material-symbols-rounded">arrow_drop_down</span>
+                        <div class="selected-value">
+                            <div class="selected-value-icon left">
+                                <span class="material-symbols-rounded">inventory_2</span>
+                            </div>
+                            <span class="selected-value-text">Cualquier tipo de artículo</span>
+                        </div>
+                        <div class="selected-value-icon">
+                            <span class="material-symbols-rounded">arrow_drop_down</span>
+                        </div>
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                         <div class="menu-content">
@@ -52,8 +59,15 @@
                 <label>Filtrar por fecha</label>
                 <div class="profile-control-group">
                     <div class="selector-input" data-action="toggleSelector">
-                        <span class="selected-value">Todo</span>
-                        <span class="material-symbols-rounded">arrow_drop_down</span>
+                        <div class="selected-value">
+                            <div class="selected-value-icon left">
+                                <span class="material-symbols-rounded">calendar_today</span>
+                            </div>
+                            <span class="selected-value-text">Todo</span>
+                        </div>
+                        <div class="selected-value-icon">
+                            <span class="material-symbols-rounded">arrow_drop_down</span>
+                        </div>
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                         <div class="menu-content">

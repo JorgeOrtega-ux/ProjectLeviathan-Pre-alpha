@@ -17,8 +17,15 @@
                 </div>
                 <div class="profile-control-group">
                     <div class="selector-input" data-action="toggleSelector">
-                        <span class="selected-value">Sincronizar con el sistema</span>
-                        <span class="material-symbols-rounded">arrow_drop_down</span>
+                        <div class="selected-value">
+                            <div class="selected-value-icon left">
+                                <span class="material-symbols-rounded">sync</span>
+                            </div>
+                            <span class="selected-value-text">Sincronizar con el sistema</span>
+                        </div>
+                        <div class="selected-value-icon">
+                            <span class="material-symbols-rounded">arrow_drop_down</span>
+                        </div>
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                          <div class="menu-content">
@@ -30,11 +37,11 @@
                                     </div>
                                     <div class="menu-link" data-value="light">
                                         <div class="menu-link-icon"><span class="material-symbols-rounded">light_mode</span></div>
-                                        <div class="menu-link-text"><span>Claro</span></div>
+                                        <div class="menu-link-text"><span>Tema claro</span></div>
                                     </div>
                                     <div class="menu-link" data-value="dark">
                                         <div class="menu-link-icon"><span class="material-symbols-rounded">dark_mode</span></div>
-                                        <div class="menu-link-text"><span>Oscuro</span></div>
+                                        <div class="menu-link-text"><span>Tema oscuro</span></div>
                                     </div>
                                 </div>
                             </div>

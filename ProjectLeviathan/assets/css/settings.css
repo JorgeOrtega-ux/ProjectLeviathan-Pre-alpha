@@ -232,7 +232,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 12px;
+    padding: 0;
     height: 40px;
     border: 1px solid #00000020;
     border-radius: 8px;
@@ -249,11 +249,33 @@
     border-color: #000;
 }
 
-.selector-input .selected-value {
+.selected-value {
+    flex: 1 1 auto;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.selected-value-text {
     font-size: 0.9rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: block;
+    flex: 1 1 auto;
+}
+
+.selected-value-icon {
+    width: 45px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.selected-value-icon.left {
+    width: 45px;
 }
 
 .selector-input .material-symbols-rounded {
@@ -261,7 +283,7 @@
     transition: transform 0.2s ease;
 }
 
-.selector-input.active .material-symbols-rounded {
+.selector-input.active .selected-value-icon:not(.left) .material-symbols-rounded {
     transform: rotate(180deg);
 }
 
@@ -467,7 +489,7 @@ input:checked~.material-symbols-rounded {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 12px;
+    padding: 0;
     height: 40px;
     border: 1px solid #00000020;
     border-radius: 8px;
@@ -484,7 +506,7 @@ input:checked~.material-symbols-rounded {
     border-color: #000;
 }
 
-.filter-group .selector-input .selected-value {
+.filter-group .selected-value-text {
     font-size: 0.9rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -496,7 +518,7 @@ input:checked~.material-symbols-rounded {
     transition: transform 0.2s ease;
 }
 
-.filter-group .selector-input.active .material-symbols-rounded {
+.filter-group .selector-input.active .selected-value-icon:not(.left) .material-symbols-rounded {
     transform: rotate(180deg);
 }
 

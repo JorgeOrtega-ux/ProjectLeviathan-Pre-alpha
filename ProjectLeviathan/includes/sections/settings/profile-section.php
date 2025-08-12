@@ -84,8 +84,15 @@
                 </div>
                 <div class="profile-control-group">
                     <div class="selector-input" data-action="toggleSelector">
-                        <span class="selected-value">Español (Latinoamérica)</span>
-                        <span class="material-symbols-rounded">arrow_drop_down</span>
+                        <div class="selected-value">
+                            <div class="selected-value-icon left">
+                                <span class="material-symbols-rounded">language</span>
+                            </div>
+                            <span class="selected-value-text">Español (Latinoamérica)</span>
+                        </div>
+                        <div class="selected-value-icon">
+                            <span class="material-symbols-rounded">arrow_drop_down</span>
+                        </div>
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                          <div class="menu-content">
@@ -114,8 +121,15 @@
                 </div>
                 <div class="profile-control-group">
                     <div class="selector-input" data-action="toggleSelector">
-                        <span class="selected-value">Uso personal</span>
-                        <span class="material-symbols-rounded">arrow_drop_down</span>
+                        <div class="selected-value">
+                            <div class="selected-value-icon left">
+                                <span class="material-symbols-rounded">person</span>
+                            </div>
+                            <span class="selected-value-text">Uso personal</span>
+                        </div>
+                        <div class="selected-value-icon">
+                            <span class="material-symbols-rounded">arrow_drop_down</span>
+                        </div>
                     </div>
                     <div class="module-content module-selector body-title disabled" data-module="moduleSelector">
                         <div class="menu-content">

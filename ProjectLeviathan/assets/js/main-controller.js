@@ -459,7 +459,8 @@ function initMainController() {
             button.setAttribute('aria-controls', popperId);
 
             const menuLinks = selectorDropdown.querySelectorAll('.menu-link');
-            const selectedValueSpan = button.querySelector('.selected-value');
+            const selectedValueSpan = button.querySelector('.selected-value-text');
+            const selectedValueIconLeft = button.querySelector('.selected-value-icon.left .material-symbols-rounded');
 
             button.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -499,6 +500,11 @@ function initMainController() {
                     const newText = link.querySelector('.menu-link-text span').textContent;
                     if (selectedValueSpan) {
                         selectedValueSpan.textContent = newText;
+                    }
+                    
+                    const newIcon = link.querySelector('.menu-link-icon .material-symbols-rounded');
+                    if (selectedValueIconLeft && newIcon) {
+                        selectedValueIconLeft.textContent = newIcon.textContent;
                     }
 
                     selectorDropdown.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
