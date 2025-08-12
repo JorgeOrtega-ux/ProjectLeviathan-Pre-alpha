@@ -454,6 +454,7 @@ function initMainController() {
 
                 if (!allowMultipleActiveModules) {
                     if (closeAllSelectors()) updateLogState();
+                    if (closeMenuSurface()) updateLogState(); // <-- LÍNEA AÑADIDA
                 }
                 closeMenuOptions();
 
