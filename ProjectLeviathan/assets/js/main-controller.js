@@ -352,8 +352,29 @@ function initMainController() {
             navigateToUrl(mainSection, activeStateSetter);
         }
     };
+    
+    const resetUIComponents = () => {
+        if (closeAllSelectors()) {
+            updateLogState();
+        }
+
+        document.querySelectorAll('.profile-card-item .edit-state').forEach(editState => {
+            if (!editState.classList.contains('hidden')) {
+                editState.classList.add('hidden');
+                const parent = editState.closest('.profile-card-item');
+                if (parent) {
+                    const viewState = parent.querySelector('.view-state');
+                    if (viewState && viewState.classList.contains('hidden')) {
+                        viewState.classList.remove('hidden');
+                    }
+                }
+            }
+        });
+    };
 
     const handleNavigationChange = (section, subsection = null, updateUrl = true) => {
+        resetUIComponents();
+        
         if (section === 'home') {
             setSectionActive(sectionHome, [sectionExplore, sectionSettings, sectionHelp], 'home', updateUrl);
             updateMainMenuButtons(toggleSectionHomeButton);
@@ -454,7 +475,7 @@ function initMainController() {
 
                 if (!allowMultipleActiveModules) {
                     if (closeAllSelectors()) updateLogState();
-                    if (closeMenuSurface()) updateLogState(); // <-- LÍNEA AÑADIDA
+                    if (closeMenuSurface()) updateLogState();
                 }
                 closeMenuOptions();
 
