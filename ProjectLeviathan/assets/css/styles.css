@@ -374,7 +374,6 @@ body {
     animation: fadeOut 0.3s ease-out forwards;
 }
 
-/* Estilos específicos para la página 404 */
 .error-404 {
     width: 100%;
     display: flex;

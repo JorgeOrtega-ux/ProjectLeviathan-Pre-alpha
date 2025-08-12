@@ -2,35 +2,29 @@ import { initDragController } from './drag-controller.js';
 import { initUrlManager, navigateToUrl, getCurrentUrlState, setupPopStateHandler, setInitialHistoryState } from './url-manager.js';
 
 function initMainController() {
-    // --- General Settings ---
     const closeOnClickOutside = true;
     const closeOnEscape = true;
     const allowMultipleActiveModules = false;
     let isAnimating = false;
 
-    // Initialize URL manager
     initUrlManager();
     const initialState = getCurrentUrlState();
     
-    // --- State Variables (initialized from current URL) ---
     let isSectionHomeActive = initialState ? initialState.section === 'home' : true;
     let isSectionExploreActive = initialState ? initialState.section === 'explore' : false;
     let isSectionSettingsActive = initialState ? initialState.section === 'settings' : false;
     let isSectionHelpActive = initialState ? initialState.section === 'help' : false;
     
-    // Settings subsections
     let isSectionProfileActive = initialState ? initialState.subsection === 'profile' : false;
     let isSectionLoginActive = initialState ? initialState.subsection === 'login' : false;
     let isSectionAccessibilityActive = initialState ? initialState.subsection === 'accessibility' : false;
     let isSectionPurchaseHistoryActive = initialState ? initialState.subsection === 'purchaseHistory' : false;
     
-    // Help subsections
     let isSectionPrivacyActive = initialState ? initialState.subsection === 'privacy' : false;
     let isSectionTermsActive = initialState ? initialState.subsection === 'terms' : false;
     let isSectionCookiesActive = initialState ? initialState.subsection === 'cookies' : false;
     let isSectionSuggestionsActive = initialState ? initialState.subsection === 'suggestions' : false;
 
-    // --- Element Selectors ---
     const toggleOptionsButton = document.querySelector('[data-action="toggleModuleOptions"]');
     const moduleOptions = document.querySelector('[data-module="moduleOptions"]');
     const toggleSurfaceButton = document.querySelector('[data-action="toggleModuleSurface"]');
@@ -40,41 +34,34 @@ function initMainController() {
     const surfaceHelp = document.querySelector('[data-surface-type="help"]');
     const customSelectorButtons = document.querySelectorAll('[data-action="toggleSelector"]');
     
-    // Sections
     const sectionHome = document.querySelector('[data-section="sectionHome"]');
     const sectionExplore = document.querySelector('[data-section="sectionExplore"]');
     const sectionSettings = document.querySelector('[data-section="sectionSettings"]');
     const sectionHelp = document.querySelector('[data-section="sectionHelp"]');
     
-    // Settings subsections
     const sectionProfile = document.querySelector('[data-section="sectionProfile"]');
     const sectionLogin = document.querySelector('[data-section="sectionLogin"]');
     const sectionAccessibility = document.querySelector('[data-section="sectionAccessibility"]');
     const sectionPurchaseHistory = document.querySelector('[data-section="sectionPurchaseHistory"]');
     
-    // Help subsections
     const sectionPrivacy = document.querySelector('[data-section="sectionPrivacy"]');
     const sectionTerms = document.querySelector('[data-section="sectionTerms"]');
     const sectionCookies = document.querySelector('[data-section="sectionCookies"]');
     const sectionSuggestions = document.querySelector('[data-section="sectionSuggestions"]');
     
-    // Main navigation buttons
     const toggleSectionHomeButton = document.querySelector('[data-action="toggleSectionHome"]');
     const toggleSectionExploreButton = document.querySelector('[data-action="toggleSectionExplore"]');
     
-    // Options menu buttons
     const toggleSectionSettingsButton = document.querySelector('[data-action="toggleSectionSettings"]');
     const toggleSectionHelpButton = document.querySelector('[data-action="toggleSectionHelp"]');
     const toggleSectionPurchaseHistoryButton = document.querySelector('[data-action="toggleSectionPurchaseHistory"]');
     
-    // Settings navigation buttons
     const toggleSectionHomeFromSettingsButton = document.querySelector('[data-action="toggleSectionHomeFromSettings"]');
     const toggleSectionProfileButton = document.querySelector('[data-action="toggleSectionProfile"]');
     const toggleSectionLoginButton = document.querySelector('[data-action="toggleSectionLogin"]');
     const toggleSectionAccessibilityButton = document.querySelector('[data-action="toggleSectionAccessibility"]');
     const toggleSectionPurchaseHistoryFromSettingsButton = document.querySelector('[data-action="toggleSectionPurchaseHistoryFromSettings"]');
     
-    // Help navigation buttons
     const toggleSectionHomeFromHelpButton = document.querySelector('[data-action="toggleSectionHomeFromHelp"]');
     const toggleSectionPrivacyButton = document.querySelector('[data-action="toggleSectionPrivacy"]');
     const toggleSectionTermsButton = document.querySelector('[data-action="toggleSectionTerms"]');
@@ -85,7 +72,6 @@ function initMainController() {
 
     const menuContentOptions = moduleOptions.querySelector('.menu-content');
 
-    // Setup browser navigation handling
     setInitialHistoryState();
     setupPopStateHandler((section, subsection, updateHistory) => {
         handleNavigationChange(section, subsection, updateHistory);
@@ -564,7 +550,6 @@ function initMainController() {
             });
         });
         
-        // --- INICIO: CÓDIGO CORREGIDO PARA SCROLL ---
         const generalContentTop = document.querySelector('.general-content-top');
         const scrollableSections = document.querySelectorAll('.section-content.overflow-y');
 
@@ -579,7 +564,6 @@ function initMainController() {
                 }
             });
         });
-        // --- FIN: CÓDIGO CORREGIDO PARA SCROLL ---
 
         if (toggleSectionHomeButton) {
             toggleSectionHomeButton.addEventListener('click', () => {
@@ -717,7 +701,7 @@ function initMainController() {
 
     initDragController(handleDragClose, () => isAnimating);
     
-    updateLogState(); // Initial log
+    updateLogState();
     console.log('ProjectLeviathan initialized with URL routing and dynamic modules support');
 }
 
