@@ -193,6 +193,32 @@ function initMainController() {
         }
         moduleSurface.classList.remove('disabled');
         moduleSurface.classList.add('active');
+
+        // --- START: CORRECTED CODE ---
+        // Ensure the correct inner menu is displayed based on the current section state
+        if (isSectionSettingsActive) {
+            surfaceMain.classList.add('disabled');
+            surfaceMain.classList.remove('active');
+            surfaceHelp.classList.add('disabled');
+            surfaceHelp.classList.remove('active');
+            surfaceSettings.classList.remove('disabled');
+            surfaceSettings.classList.add('active');
+        } else if (isSectionHelpActive) {
+            surfaceMain.classList.add('disabled');
+            surfaceMain.classList.remove('active');
+            surfaceSettings.classList.add('disabled');
+            surfaceSettings.classList.remove('active');
+            surfaceHelp.classList.remove('disabled');
+            surfaceHelp.classList.add('active');
+        } else {
+            surfaceSettings.classList.add('disabled');
+            surfaceSettings.classList.remove('active');
+            surfaceHelp.classList.add('disabled');
+            surfaceHelp.classList.remove('active');
+            surfaceMain.classList.remove('disabled');
+            surfaceMain.classList.add('active');
+        }
+        // --- END: CORRECTED CODE ---
     };
 
     const closeMenuSurface = () => {
